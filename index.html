@@ -231,12 +231,189 @@
         color: rgba(17, 17, 17, 0.7);
         margin: 0;
       }
+
+      /* Landing page */
+      .landing {
+        text-align: center;
+        padding: var(--space-xl) var(--space-l);
+        max-width: 640px;
+        margin: 0 auto;
+      }
+
+      .landing__headline {
+        font-family: "Georgia", "Times New Roman", serif;
+        font-size: clamp(32px, 5vw, 48px);
+        font-weight: 600;
+        line-height: 1.25;
+        margin: 0 0 var(--space-m);
+        color: var(--color-text);
+      }
+
+      .landing__subtext {
+        font-size: 18px;
+        line-height: 1.6;
+        color: rgba(17, 17, 17, 0.75);
+        margin: 0 0 var(--space-xl);
+      }
+
+      .landing__cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 28px;
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--color-bg);
+        background: var(--color-accent);
+        border: 1px solid var(--color-accent);
+        border-radius: var(--radius-pill);
+        text-decoration: none;
+        transition: background-color var(--transition-fast), border-color var(--transition-fast);
+      }
+
+      .landing__cta:hover {
+        background: rgba(139, 0, 0, 0.9);
+        border-color: rgba(139, 0, 0, 0.9);
+      }
+
+      /* Empty states */
+      .empty-state {
+        padding: var(--space-xl) 0;
+        max-width: 480px;
+      }
+
+      .empty-state__title {
+        font-family: "Georgia", "Times New Roman", serif;
+        font-size: 28px;
+        font-weight: 600;
+        line-height: 1.3;
+        margin: 0 0 var(--space-s);
+        color: var(--color-text);
+      }
+
+      .empty-state__text {
+        font-size: 16px;
+        line-height: 1.6;
+        color: rgba(17, 17, 17, 0.7);
+        margin: 0;
+      }
+
+      /* Settings form */
+      .card {
+        border-radius: var(--radius-base);
+        border: 1px solid rgba(17, 17, 17, 0.1);
+        background: rgba(17, 17, 17, 0.02);
+        padding: var(--space-l);
+        max-width: 520px;
+      }
+
+      .card__title {
+        font-family: "Georgia", "Times New Roman", serif;
+        font-size: 24px;
+        font-weight: 600;
+        margin: 0 0 var(--space-m);
+        color: var(--color-text);
+      }
+
+      .field {
+        margin-bottom: var(--space-m);
+      }
+
+      .field__label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 6px;
+        color: var(--color-text);
+      }
+
+      .field__input,
+      .field__select {
+        width: 100%;
+        font-family: inherit;
+        font-size: 14px;
+        padding: 10px 14px;
+        border-radius: var(--radius-base);
+        border: 1px solid rgba(17, 17, 17, 0.18);
+        background: var(--color-bg);
+        color: var(--color-text);
+        transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+      }
+
+      .field__input:focus,
+      .field__select:focus {
+        outline: none;
+        border-color: var(--color-accent);
+        box-shadow: 0 0 0 1px var(--color-accent);
+      }
+
+      .field__hint {
+        font-size: 13px;
+        color: rgba(17, 17, 17, 0.6);
+        margin-top: 4px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: 500;
+        border-radius: var(--radius-pill);
+        cursor: pointer;
+        border: 1px solid transparent;
+        background: transparent;
+        color: var(--color-text);
+        transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+      }
+
+      .btn--primary {
+        background: var(--color-accent);
+        border-color: var(--color-accent);
+        color: var(--color-bg);
+      }
+
+      .btn--primary:hover {
+        background: rgba(139, 0, 0, 0.9);
+        border-color: rgba(139, 0, 0, 0.9);
+      }
+
+      .btn--secondary {
+        border-color: rgba(17, 17, 17, 0.25);
+      }
+
+      .btn--secondary:hover {
+        background: rgba(17, 17, 17, 0.04);
+        border-color: rgba(17, 17, 17, 0.35);
+      }
+
+      /* Proof placeholder */
+      .proof-placeholder {
+        padding: var(--space-l) 0;
+        max-width: 560px;
+      }
+
+      .proof-placeholder__title {
+        font-family: "Georgia", "Times New Roman", serif;
+        font-size: 28px;
+        font-weight: 600;
+        margin: 0 0 var(--space-s);
+        color: var(--color-text);
+      }
+
+      .proof-placeholder__text {
+        font-size: 16px;
+        line-height: 1.6;
+        color: rgba(17, 17, 17, 0.7);
+        margin: 0;
+      }
     </style>
   </head>
   <body>
     <div class="app-shell">
       <header class="nav">
-        <a href="#/dashboard" class="nav__brand">Job Notification Tracker</a>
+        <a href="#/" class="nav__brand">Job Notification Tracker</a>
         <ul class="nav__links" id="nav-links">
           <li><a class="nav__link" href="#/dashboard" data-route="dashboard">Dashboard</a></li>
           <li><a class="nav__link" href="#/saved" data-route="saved">Saved</a></li>
@@ -261,38 +438,84 @@
       </div>
 
       <main class="main" id="route-outlet">
+        <section class="route-page" id="page-landing" data-route="landing">
+          <div class="landing">
+            <h1 class="landing__headline">Stop Missing The Right Jobs.</h1>
+            <p class="landing__subtext">Precision-matched job discovery delivered daily at 9AM.</p>
+            <a href="#/settings" class="landing__cta">Start Tracking</a>
+          </div>
+        </section>
         <section class="route-page" id="page-dashboard" data-route="dashboard">
-          <h1 class="route-page__title">Dashboard</h1>
-          <p class="route-page__subtitle">This section will be built in the next step.</p>
+          <div class="empty-state">
+            <h2 class="empty-state__title">Dashboard</h2>
+            <p class="empty-state__text">No jobs yet. In the next step, you will load a realistic dataset.</p>
+          </div>
         </section>
         <section class="route-page" id="page-saved" data-route="saved">
-          <h1 class="route-page__title">Saved</h1>
-          <p class="route-page__subtitle">This section will be built in the next step.</p>
+          <div class="empty-state">
+            <h2 class="empty-state__title">Saved</h2>
+            <p class="empty-state__text">Jobs you save will appear here. Nothing saved yet.</p>
+          </div>
         </section>
         <section class="route-page" id="page-digest" data-route="digest">
-          <h1 class="route-page__title">Digest</h1>
-          <p class="route-page__subtitle">This section will be built in the next step.</p>
+          <div class="empty-state">
+            <h2 class="empty-state__title">Digest</h2>
+            <p class="empty-state__text">Your daily digest will be built in a later step. Check back soon.</p>
+          </div>
         </section>
         <section class="route-page" id="page-settings" data-route="settings">
           <h1 class="route-page__title">Settings</h1>
-          <p class="route-page__subtitle">This section will be built in the next step.</p>
+          <div class="card">
+            <h2 class="card__title">Preferences</h2>
+            <div class="field">
+              <label class="field__label" for="pref-role">Role keywords</label>
+              <input id="pref-role" class="field__input" type="text" placeholder="e.g. Frontend, React, Product Manager" />
+              <span class="field__hint">Comma-separated or space-separated.</span>
+            </div>
+            <div class="field">
+              <label class="field__label" for="pref-locations">Preferred locations</label>
+              <input id="pref-locations" class="field__input" type="text" placeholder="e.g. Bangalore, Remote India" />
+            </div>
+            <div class="field">
+              <label class="field__label" for="pref-mode">Mode</label>
+              <select id="pref-mode" class="field__select">
+                <option value="">Select mode</option>
+                <option value="remote">Remote</option>
+                <option value="hybrid">Hybrid</option>
+                <option value="onsite">Onsite</option>
+              </select>
+            </div>
+            <div class="field">
+              <label class="field__label" for="pref-experience">Experience level</label>
+              <select id="pref-experience" class="field__select">
+                <option value="">Select level</option>
+                <option value="intern">Intern</option>
+                <option value="entry">Entry</option>
+                <option value="mid">Mid</option>
+                <option value="senior">Senior</option>
+                <option value="lead">Lead</option>
+              </select>
+            </div>
+            <button type="button" class="btn btn--primary" disabled>Save preferences (coming next)</button>
+          </div>
         </section>
         <section class="route-page" id="page-proof" data-route="proof">
-          <h1 class="route-page__title">Proof</h1>
-          <p class="route-page__subtitle">This section will be built in the next step.</p>
+          <div class="proof-placeholder">
+            <h2 class="proof-placeholder__title">Proof</h2>
+            <p class="proof-placeholder__text">Placeholder for artifact collection. This section will be built in a later step.</p>
+          </div>
         </section>
       </main>
     </div>
 
     <script>
       (function () {
-        var PLACEHOLDER_SUBTITLE = "This section will be built in the next step.";
-        var DEFAULT_ROUTE = "dashboard";
+        var DEFAULT_ROUTE = "landing";
 
         function getRoute() {
           var hash = window.location.hash.slice(1) || "/";
           var path = hash.charAt(0) === "/" ? hash.slice(1) : hash;
-          var segment = path.split("/")[0] || "";
+          var segment = (path.split("/")[0] || "").toLowerCase();
           return segment || DEFAULT_ROUTE;
         }
 
