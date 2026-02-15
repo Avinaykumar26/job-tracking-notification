@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>KodNest Premium Build System</title>
+    <title>Job Notification Tracker · KodNest</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
       :root {
@@ -42,8 +42,8 @@
         flex-direction: column;
       }
 
-      /* Top Bar */
-      .top-bar {
+      /* Top navigation */
+      .nav {
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -52,403 +52,295 @@
         background-color: var(--color-bg);
       }
 
-      .top-bar__project {
+      .nav__brand {
         font-weight: 600;
         font-size: 16px;
+        color: var(--color-text);
+        text-decoration: none;
       }
 
-      .top-bar__progress {
-        font-size: 14px;
-      }
-
-      .top-bar__status {
-        padding: 4px var(--space-s);
-        border-radius: var(--radius-pill);
-        border: 1px solid rgba(17, 17, 17, 0.16);
-        background-color: rgba(17, 17, 17, 0.02);
-        font-size: 13px;
-      }
-
-      /* Context Header */
-      .context-header {
-        padding: var(--space-m) var(--space-l) var(--space-m);
-      }
-
-      .context-header__title {
-        font-family: "Georgia", "Times New Roman", serif;
-        font-size: 32px;
-        font-weight: 600;
-        line-height: 1.3;
-        margin: 0 0 var(--space-xs);
-      }
-
-      .context-header__subtitle {
-        max-width: 720px;
-        font-size: 16px;
-        line-height: 1.6;
-        color: rgba(17, 17, 17, 0.8);
+      .nav__links {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        list-style: none;
         margin: 0;
+        padding: 0;
       }
 
-      /* Main Layout */
-      .main {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        padding: 0 var(--space-l);
-      }
-
-      .workspace-layout {
-        display: grid;
-        grid-template-columns: 7fr 3fr;
-        gap: var(--space-m);
-        padding-bottom: var(--space-l);
-      }
-
-      /* Cards */
-      .card {
-        border-radius: var(--radius-base);
-        border: 1px solid rgba(17, 17, 17, 0.1);
-        background-color: rgba(17, 17, 17, 0.02);
-        padding: var(--space-m);
-      }
-
-      .card__header {
-        margin-bottom: var(--space-s);
-      }
-
-      .card__title {
-        font-size: 18px;
-        font-weight: 600;
-        margin: 0 0 var(--space-xs);
-      }
-
-      .card__body {
-        font-size: 14px;
-        line-height: 1.6;
-        max-width: 720px;
-      }
-
-      /* Buttons */
-      .button-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--space-xs);
-        margin-top: var(--space-m);
-      }
-
-      .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: var(--radius-pill);
-        padding: 8px 16px;
+      .nav__link {
+        display: block;
+        padding: var(--space-s) var(--space-m);
         font-size: 14px;
         font-weight: 500;
-        cursor: pointer;
-        border: 1px solid transparent;
-        background: transparent;
         color: var(--color-text);
-        transition: background-color var(--transition-fast),
-          border-color var(--transition-fast), color var(--transition-fast);
+        text-decoration: none;
+        border-bottom: 2px solid transparent;
+        transition: border-color var(--transition-fast), color var(--transition-fast);
       }
 
-      .btn--primary {
-        background-color: var(--color-accent);
-        border-color: var(--color-accent);
-        color: var(--color-bg);
-      }
-
-      .btn--primary:hover {
-        background-color: rgba(139, 0, 0, 0.9);
-      }
-
-      .btn--secondary {
-        border-color: rgba(17, 17, 17, 0.25);
-      }
-
-      .btn--secondary:hover {
-        background-color: rgba(17, 17, 17, 0.04);
-        border-color: rgba(17, 17, 17, 0.35);
-      }
-
-      /* Inputs */
-      .field {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        margin-bottom: var(--space-s);
-      }
-
-      .field__label {
-        font-size: 14px;
-        font-weight: 500;
-      }
-
-      .field__input,
-      .field__textarea {
-        font-family: inherit;
-        font-size: 14px;
-        padding: 8px 12px;
-        border-radius: var(--radius-base);
-        border: 1px solid rgba(17, 17, 17, 0.18);
-        background-color: var(--color-bg);
-        color: var(--color-text);
-        transition: border-color var(--transition-fast),
-          box-shadow var(--transition-fast), background-color var(--transition-fast);
-      }
-
-      .field__textarea {
-        min-height: 120px;
-        resize: vertical;
-      }
-
-      .field__input:focus,
-      .field__textarea:focus {
-        outline: none;
-        border-color: var(--color-accent);
-        box-shadow: 0 0 0 1px var(--color-accent);
-      }
-
-      .field__hint {
-        font-size: 13px;
-        color: rgba(17, 17, 17, 0.7);
-      }
-
-      /* Secondary Panel specifics */
-      .secondary-panel__section-title {
-        font-size: 14px;
-        font-weight: 600;
-        margin: 0 0 var(--space-xs);
-      }
-
-      .secondary-panel__copy-box {
-        margin-top: var(--space-s);
-      }
-
-      .copy-box {
-        border-radius: var(--radius-base);
-        border: 1px solid rgba(17, 17, 17, 0.1);
-        background-color: rgba(17, 17, 17, 0.02);
-        padding: var(--space-s);
-      }
-
-      .copy-box__label {
-        font-size: 13px;
-        margin-bottom: var(--space-xs);
-      }
-
-      .copy-box__content {
-        font-size: 13px;
-        line-height: 1.6;
-        white-space: pre-wrap;
-      }
-
-      /* Proof Footer */
-      .proof-footer {
-        border-top: 1px solid rgba(17, 17, 17, 0.08);
-        padding: var(--space-s) var(--space-l);
-        background-color: var(--color-bg);
-      }
-
-      .proof-footer__content {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--space-m);
-      }
-
-      .proof-item {
-        display: flex;
-        align-items: center;
-        gap: var(--space-xs);
-        padding: 4px 0;
-      }
-
-      .proof-item__label {
-        font-size: 14px;
-        margin-right: var(--space-xs);
-      }
-
-      .proof-item__input {
-        min-width: 160px;
-      }
-
-      .checkbox {
-        width: 16px;
-        height: 16px;
-        border-radius: 4px;
-        border: 2px solid currentColor;
-        display: inline-block;
-      }
-
-      .proof-item--ui-built {
+      .nav__link:hover {
         color: var(--color-accent);
       }
 
-      .proof-item--logic-working {
+      .nav__link.is-active {
+        color: var(--color-accent);
+        border-bottom-color: var(--color-accent);
+      }
+
+      .nav__hamburger {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        border: none;
+        background: transparent;
+        color: var(--color-text);
+        cursor: pointer;
+        border-radius: var(--radius-base);
+        transition: background-color var(--transition-fast);
+      }
+
+      .nav__hamburger:hover {
+        background-color: rgba(17, 17, 17, 0.06);
+      }
+
+      .nav__hamburger-icon {
+        position: relative;
+        display: block;
+        width: 20px;
+        height: 2px;
+        background: currentColor;
+        box-shadow: 0 6px 0 currentColor, 0 -6px 0 currentColor;
+        transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+      }
+
+      .nav__hamburger-icon::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 20px;
+        height: 2px;
+        background: currentColor;
+        transform: rotate(90deg);
+        opacity: 0;
+        transition: opacity var(--transition-fast);
+      }
+
+      .nav__hamburger[aria-expanded="true"] .nav__hamburger-icon {
+        transform: rotate(45deg);
+        box-shadow: none;
+      }
+
+      .nav__hamburger[aria-expanded="true"] .nav__hamburger-icon::after {
+        transform: rotate(-90deg);
+        opacity: 1;
+      }
+
+      .nav__drawer {
+        display: none;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: var(--color-bg);
+        z-index: 100;
+        padding: var(--space-xl) var(--space-l) var(--space-l);
+        overflow: auto;
+      }
+
+      .nav__drawer.is-open {
+        display: block;
+      }
+
+      .nav__drawer .nav__links {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+      }
+
+      .nav__drawer .nav__link {
+        padding: var(--space-m);
+        border-bottom: 1px solid rgba(17, 17, 17, 0.08);
+        border-bottom-width: 1px;
+      }
+
+      .nav__drawer-close {
+        position: absolute;
+        top: var(--space-s);
+        right: var(--space-s);
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        border: none;
+        background: transparent;
+        color: var(--color-text);
+        cursor: pointer;
+        border-radius: var(--radius-base);
+        font-size: 24px;
+        line-height: 1;
+      }
+
+      @media (max-width: 768px) {
+        .nav__links:not(.nav__drawer .nav__links) {
+          display: none;
+        }
+
+        .nav__hamburger {
+          display: flex;
+        }
+      }
+
+      @media (min-width: 769px) {
+        .nav__drawer {
+          display: none !important;
+        }
+      }
+
+      /* Route placeholder pages */
+      .main {
+        flex: 1;
+        padding: var(--space-xl) var(--space-l);
+      }
+
+      .route-page {
+        display: none;
+        max-width: 720px;
+      }
+
+      .route-page.is-active {
+        display: block;
+      }
+
+      .route-page__title {
+        font-family: "Georgia", "Times New Roman", serif;
+        font-size: 36px;
+        font-weight: 600;
+        line-height: 1.3;
+        margin: 0 0 var(--space-m);
         color: var(--color-text);
       }
 
-      .proof-item--test-passed {
-        color: var(--color-success);
-      }
-
-      .proof-item--deployed {
-        color: var(--color-warning);
-      }
-
-      @media (max-width: 960px) {
-        .workspace-layout {
-          grid-template-columns: 1fr;
-        }
+      .route-page__subtitle {
+        font-size: 16px;
+        line-height: 1.6;
+        color: rgba(17, 17, 17, 0.7);
+        margin: 0;
       }
     </style>
   </head>
   <body>
     <div class="app-shell">
-      <!-- Top Bar -->
-      <header class="top-bar">
-        <div class="top-bar__project">KodNest Premium Build System</div>
-        <div class="top-bar__progress">Step 1 / 5</div>
-        <div class="top-bar__status">Not Started</div>
+      <header class="nav">
+        <a href="#/dashboard" class="nav__brand">Job Notification Tracker</a>
+        <ul class="nav__links" id="nav-links">
+          <li><a class="nav__link" href="#/dashboard" data-route="dashboard">Dashboard</a></li>
+          <li><a class="nav__link" href="#/saved" data-route="saved">Saved</a></li>
+          <li><a class="nav__link" href="#/digest" data-route="digest">Digest</a></li>
+          <li><a class="nav__link" href="#/settings" data-route="settings">Settings</a></li>
+          <li><a class="nav__link" href="#/proof" data-route="proof">Proof</a></li>
+        </ul>
+        <button type="button" class="nav__hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="nav-drawer">
+          <span class="nav__hamburger-icon"></span>
+        </button>
       </header>
 
-      <!-- Context Header -->
-      <section class="context-header">
-        <h1 class="context-header__title">Define your build context</h1>
-        <p class="context-header__subtitle">
-          Provide a clear description of what you are building so every step stays aligned and auditable.
-        </p>
-      </section>
+      <div class="nav__drawer" id="nav-drawer" role="dialog" aria-label="Navigation menu">
+        <button type="button" class="nav__drawer-close" id="nav-drawer-close" aria-label="Close menu">&times;</button>
+        <ul class="nav__links">
+          <li><a class="nav__link" href="#/dashboard" data-route="dashboard">Dashboard</a></li>
+          <li><a class="nav__link" href="#/saved" data-route="saved">Saved</a></li>
+          <li><a class="nav__link" href="#/digest" data-route="digest">Digest</a></li>
+          <li><a class="nav__link" href="#/settings" data-route="settings">Settings</a></li>
+          <li><a class="nav__link" href="#/proof" data-route="proof">Proof</a></li>
+        </ul>
+      </div>
 
-      <!-- Main Layout -->
-      <main class="main">
-        <section class="workspace-layout">
-          <!-- Primary Workspace (70%) -->
-          <section class="primary-workspace">
-            <div class="card">
-              <div class="card__header">
-                <h2 class="card__title">Primary workspace example</h2>
-                <p class="card__body">
-                  This area is reserved for the main interaction: configuration, forms, data views, and structured flows. Keep it calm, predictable, and free of unnecessary decoration.
-                </p>
-              </div>
-              <div class="card__body">
-                <div class="field">
-                  <label class="field__label" for="project-name">Project name</label>
-                  <input
-                    id="project-name"
-                    class="field__input"
-                    type="text"
-                    placeholder="e.g. Job Notification Tracker"
-                  />
-                  <div class="field__hint">
-                    This name appears in your top bar and audit logs.
-                  </div>
-                </div>
-                <div class="field">
-                  <label class="field__label" for="project-description"
-                    >Purpose statement</label
-                  >
-                  <textarea
-                    id="project-description"
-                    class="field__textarea"
-                    placeholder="Describe what this experience should reliably achieve for end users."
-                  ></textarea>
-                </div>
-                <div class="button-row">
-                  <button class="btn btn--primary" type="button">
-                    Save context
-                  </button>
-                  <button class="btn btn--secondary" type="button">
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- Secondary Panel (30%) -->
-          <aside class="secondary-panel">
-            <div class="card">
-              <div class="card__header">
-                <p class="secondary-panel__section-title">Step guidance</p>
-                <p class="card__body">
-                  Capture a single, unambiguous description of the build. This will be reused across tools and teams.
-                </p>
-              </div>
-
-              <div class="secondary-panel__copy-box">
-                <div class="copy-box">
-                  <div class="copy-box__label">Prompt for this step</div>
-                  <div class="copy-box__content">
-Provide a calm, factual description of the interface you are about to build, including target users, key states, and success criteria.</div>
-                </div>
-              </div>
-
-              <div class="button-row">
-                <button class="btn btn--secondary" type="button">
-                  Copy
-                </button>
-                <button class="btn btn--primary" type="button">
-                  Build in Lovable
-                </button>
-                <button class="btn btn--secondary" type="button">
-                  It Worked
-                </button>
-                <button class="btn btn--secondary" type="button">
-                  Error
-                </button>
-                <button class="btn btn--secondary" type="button">
-                  Add Screenshot
-                </button>
-              </div>
-            </div>
-          </aside>
+      <main class="main" id="route-outlet">
+        <section class="route-page" id="page-dashboard" data-route="dashboard">
+          <h1 class="route-page__title">Dashboard</h1>
+          <p class="route-page__subtitle">This section will be built in the next step.</p>
+        </section>
+        <section class="route-page" id="page-saved" data-route="saved">
+          <h1 class="route-page__title">Saved</h1>
+          <p class="route-page__subtitle">This section will be built in the next step.</p>
+        </section>
+        <section class="route-page" id="page-digest" data-route="digest">
+          <h1 class="route-page__title">Digest</h1>
+          <p class="route-page__subtitle">This section will be built in the next step.</p>
+        </section>
+        <section class="route-page" id="page-settings" data-route="settings">
+          <h1 class="route-page__title">Settings</h1>
+          <p class="route-page__subtitle">This section will be built in the next step.</p>
+        </section>
+        <section class="route-page" id="page-proof" data-route="proof">
+          <h1 class="route-page__title">Proof</h1>
+          <p class="route-page__subtitle">This section will be built in the next step.</p>
         </section>
       </main>
-
-      <!-- Proof Footer -->
-      <footer class="proof-footer">
-        <div class="proof-footer__content">
-          <div class="proof-item proof-item--ui-built">
-            <span class="checkbox" aria-hidden="true"></span>
-            <span class="proof-item__label">UI Built</span>
-            <input
-              class="field__input proof-item__input"
-              type="text"
-              placeholder="Link or reference"
-            />
-          </div>
-          <div class="proof-item proof-item--logic-working">
-            <span class="checkbox" aria-hidden="true"></span>
-            <span class="proof-item__label">Logic Working</span>
-            <input
-              class="field__input proof-item__input"
-              type="text"
-              placeholder="Notes or ticket ID"
-            />
-          </div>
-          <div class="proof-item proof-item--test-passed">
-            <span class="checkbox" aria-hidden="true"></span>
-            <span class="proof-item__label">Test Passed</span>
-            <input
-              class="field__input proof-item__input"
-              type="text"
-              placeholder="Test run or suite"
-            />
-          </div>
-          <div class="proof-item proof-item--deployed">
-            <span class="checkbox" aria-hidden="true"></span>
-            <span class="proof-item__label">Deployed</span>
-            <input
-              class="field__input proof-item__input"
-              type="text"
-              placeholder="Environment or URL"
-            />
-          </div>
-        </div>
-      </footer>
     </div>
+
+    <script>
+      (function () {
+        var PLACEHOLDER_SUBTITLE = "This section will be built in the next step.";
+        var DEFAULT_ROUTE = "dashboard";
+
+        function getRoute() {
+          var hash = window.location.hash.slice(1) || "/";
+          var path = hash.charAt(0) === "/" ? hash.slice(1) : hash;
+          var segment = path.split("/")[0] || "";
+          return segment || DEFAULT_ROUTE;
+        }
+
+        function render(route) {
+          var pages = document.querySelectorAll(".route-page");
+          var links = document.querySelectorAll(".nav__link[data-route]");
+          route = route || getRoute();
+          if (!document.getElementById("page-" + route)) route = DEFAULT_ROUTE;
+
+          pages.forEach(function (page) {
+            page.classList.toggle("is-active", page.getAttribute("data-route") === route);
+          });
+          links.forEach(function (link) {
+            link.classList.toggle("is-active", link.getAttribute("data-route") === route);
+          });
+        }
+
+        function openDrawer() {
+          var drawer = document.getElementById("nav-drawer");
+          var hamburger = document.getElementById("nav-hamburger");
+          if (drawer) drawer.classList.add("is-open");
+          if (hamburger) hamburger.setAttribute("aria-expanded", "true");
+        }
+
+        function closeDrawer() {
+          var drawer = document.getElementById("nav-drawer");
+          var hamburger = document.getElementById("nav-hamburger");
+          if (drawer) drawer.classList.remove("is-open");
+          if (hamburger) hamburger.setAttribute("aria-expanded", "false");
+        }
+
+        window.addEventListener("hashchange", function () {
+          render();
+        });
+
+        document.getElementById("nav-hamburger").addEventListener("click", function () {
+          if (this.getAttribute("aria-expanded") === "true") closeDrawer();
+          else openDrawer();
+        });
+
+        document.getElementById("nav-drawer-close").addEventListener("click", closeDrawer);
+
+        document.querySelectorAll("#nav-drawer .nav__link").forEach(function (link) {
+          link.addEventListener("click", closeDrawer);
+        });
+
+        render();
+      })();
+    </script>
   </body>
   </html>
