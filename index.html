@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>KodNest Premium Build System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      :root {
+        --color-bg: #F7F6F3;
+        --color-text: #111111;
+        --color-accent: #8B0000;
+        --color-success: #2F6F4E;
+        --color-warning: #B3831F;
+
+        --space-xs: 8px;
+        --space-s: 16px;
+        --space-m: 24px;
+        --space-l: 40px;
+        --space-xl: 64px;
+
+        --radius-base: 8px;
+        --radius-pill: 999px;
+
+        --transition-fast: 180ms ease-in-out;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        background-color: var(--color-bg);
+        color: var(--color-text);
+      }
+
+      .app-shell {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Top Bar */
+      .top-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--space-s) var(--space-l);
+        border-bottom: 1px solid rgba(17, 17, 17, 0.08);
+        background-color: var(--color-bg);
+      }
+
+      .top-bar__project {
+        font-weight: 600;
+        font-size: 16px;
+      }
+
+      .top-bar__progress {
+        font-size: 14px;
+      }
+
+      .top-bar__status {
+        padding: 4px var(--space-s);
+        border-radius: var(--radius-pill);
+        border: 1px solid rgba(17, 17, 17, 0.16);
+        background-color: rgba(17, 17, 17, 0.02);
+        font-size: 13px;
+      }
+
+      /* Context Header */
+      .context-header {
+        padding: var(--space-m) var(--space-l) var(--space-m);
+      }
+
+      .context-header__title {
+        font-family: "Georgia", "Times New Roman", serif;
+        font-size: 32px;
+        font-weight: 600;
+        line-height: 1.3;
+        margin: 0 0 var(--space-xs);
+      }
+
+      .context-header__subtitle {
+        max-width: 720px;
+        font-size: 16px;
+        line-height: 1.6;
+        color: rgba(17, 17, 17, 0.8);
+        margin: 0;
+      }
+
+      /* Main Layout */
+      .main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 0 var(--space-l);
+      }
+
+      .workspace-layout {
+        display: grid;
+        grid-template-columns: 7fr 3fr;
+        gap: var(--space-m);
+        padding-bottom: var(--space-l);
+      }
+
+      /* Cards */
+      .card {
+        border-radius: var(--radius-base);
+        border: 1px solid rgba(17, 17, 17, 0.1);
+        background-color: rgba(17, 17, 17, 0.02);
+        padding: var(--space-m);
+      }
+
+      .card__header {
+        margin-bottom: var(--space-s);
+      }
+
+      .card__title {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0 0 var(--space-xs);
+      }
+
+      .card__body {
+        font-size: 14px;
+        line-height: 1.6;
+        max-width: 720px;
+      }
+
+      /* Buttons */
+      .button-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-xs);
+        margin-top: var(--space-m);
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-pill);
+        padding: 8px 16px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        border: 1px solid transparent;
+        background: transparent;
+        color: var(--color-text);
+        transition: background-color var(--transition-fast),
+          border-color var(--transition-fast), color var(--transition-fast);
+      }
+
+      .btn--primary {
+        background-color: var(--color-accent);
+        border-color: var(--color-accent);
+        color: var(--color-bg);
+      }
+
+      .btn--primary:hover {
+        background-color: rgba(139, 0, 0, 0.9);
+      }
+
+      .btn--secondary {
+        border-color: rgba(17, 17, 17, 0.25);
+      }
+
+      .btn--secondary:hover {
+        background-color: rgba(17, 17, 17, 0.04);
+        border-color: rgba(17, 17, 17, 0.35);
+      }
+
+      /* Inputs */
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        margin-bottom: var(--space-s);
+      }
+
+      .field__label {
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .field__input,
+      .field__textarea {
+        font-family: inherit;
+        font-size: 14px;
+        padding: 8px 12px;
+        border-radius: var(--radius-base);
+        border: 1px solid rgba(17, 17, 17, 0.18);
+        background-color: var(--color-bg);
+        color: var(--color-text);
+        transition: border-color var(--transition-fast),
+          box-shadow var(--transition-fast), background-color var(--transition-fast);
+      }
+
+      .field__textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+
+      .field__input:focus,
+      .field__textarea:focus {
+        outline: none;
+        border-color: var(--color-accent);
+        box-shadow: 0 0 0 1px var(--color-accent);
+      }
+
+      .field__hint {
+        font-size: 13px;
+        color: rgba(17, 17, 17, 0.7);
+      }
+
+      /* Secondary Panel specifics */
+      .secondary-panel__section-title {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0 0 var(--space-xs);
+      }
+
+      .secondary-panel__copy-box {
+        margin-top: var(--space-s);
+      }
+
+      .copy-box {
+        border-radius: var(--radius-base);
+        border: 1px solid rgba(17, 17, 17, 0.1);
+        background-color: rgba(17, 17, 17, 0.02);
+        padding: var(--space-s);
+      }
+
+      .copy-box__label {
+        font-size: 13px;
+        margin-bottom: var(--space-xs);
+      }
+
+      .copy-box__content {
+        font-size: 13px;
+        line-height: 1.6;
+        white-space: pre-wrap;
+      }
+
+      /* Proof Footer */
+      .proof-footer {
+        border-top: 1px solid rgba(17, 17, 17, 0.08);
+        padding: var(--space-s) var(--space-l);
+        background-color: var(--color-bg);
+      }
+
+      .proof-footer__content {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-m);
+      }
+
+      .proof-item {
+        display: flex;
+        align-items: center;
+        gap: var(--space-xs);
+        padding: 4px 0;
+      }
+
+      .proof-item__label {
+        font-size: 14px;
+        margin-right: var(--space-xs);
+      }
+
+      .proof-item__input {
+        min-width: 160px;
+      }
+
+      .checkbox {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        border: 2px solid currentColor;
+        display: inline-block;
+      }
+
+      .proof-item--ui-built {
+        color: var(--color-accent);
+      }
+
+      .proof-item--logic-working {
+        color: var(--color-text);
+      }
+
+      .proof-item--test-passed {
+        color: var(--color-success);
+      }
+
+      .proof-item--deployed {
+        color: var(--color-warning);
+      }
+
+      @media (max-width: 960px) {
+        .workspace-layout {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <!-- Top Bar -->
+      <header class="top-bar">
+        <div class="top-bar__project">KodNest Premium Build System</div>
+        <div class="top-bar__progress">Step 1 / 5</div>
+        <div class="top-bar__status">Not Started</div>
+      </header>
+
+      <!-- Context Header -->
+      <section class="context-header">
+        <h1 class="context-header__title">Define your build context</h1>
+        <p class="context-header__subtitle">
+          Provide a clear description of what you are building so every step stays aligned and auditable.
+        </p>
+      </section>
+
+      <!-- Main Layout -->
+      <main class="main">
+        <section class="workspace-layout">
+          <!-- Primary Workspace (70%) -->
+          <section class="primary-workspace">
+            <div class="card">
+              <div class="card__header">
+                <h2 class="card__title">Primary workspace example</h2>
+                <p class="card__body">
+                  This area is reserved for the main interaction: configuration, forms, data views, and structured flows. Keep it calm, predictable, and free of unnecessary decoration.
+                </p>
+              </div>
+              <div class="card__body">
+                <div class="field">
+                  <label class="field__label" for="project-name">Project name</label>
+                  <input
+                    id="project-name"
+                    class="field__input"
+                    type="text"
+                    placeholder="e.g. Job Notification Tracker"
+                  />
+                  <div class="field__hint">
+                    This name appears in your top bar and audit logs.
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="project-description"
+                    >Purpose statement</label
+                  >
+                  <textarea
+                    id="project-description"
+                    class="field__textarea"
+                    placeholder="Describe what this experience should reliably achieve for end users."
+                  ></textarea>
+                </div>
+                <div class="button-row">
+                  <button class="btn btn--primary" type="button">
+                    Save context
+                  </button>
+                  <button class="btn btn--secondary" type="button">
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Secondary Panel (30%) -->
+          <aside class="secondary-panel">
+            <div class="card">
+              <div class="card__header">
+                <p class="secondary-panel__section-title">Step guidance</p>
+                <p class="card__body">
+                  Capture a single, unambiguous description of the build. This will be reused across tools and teams.
+                </p>
+              </div>
+
+              <div class="secondary-panel__copy-box">
+                <div class="copy-box">
+                  <div class="copy-box__label">Prompt for this step</div>
+                  <div class="copy-box__content">
+Provide a calm, factual description of the interface you are about to build, including target users, key states, and success criteria.</div>
+                </div>
+              </div>
+
+              <div class="button-row">
+                <button class="btn btn--secondary" type="button">
+                  Copy
+                </button>
+                <button class="btn btn--primary" type="button">
+                  Build in Lovable
+                </button>
+                <button class="btn btn--secondary" type="button">
+                  It Worked
+                </button>
+                <button class="btn btn--secondary" type="button">
+                  Error
+                </button>
+                <button class="btn btn--secondary" type="button">
+                  Add Screenshot
+                </button>
+              </div>
+            </div>
+          </aside>
+        </section>
+      </main>
+
+      <!-- Proof Footer -->
+      <footer class="proof-footer">
+        <div class="proof-footer__content">
+          <div class="proof-item proof-item--ui-built">
+            <span class="checkbox" aria-hidden="true"></span>
+            <span class="proof-item__label">UI Built</span>
+            <input
+              class="field__input proof-item__input"
+              type="text"
+              placeholder="Link or reference"
+            />
+          </div>
+          <div class="proof-item proof-item--logic-working">
+            <span class="checkbox" aria-hidden="true"></span>
+            <span class="proof-item__label">Logic Working</span>
+            <input
+              class="field__input proof-item__input"
+              type="text"
+              placeholder="Notes or ticket ID"
+            />
+          </div>
+          <div class="proof-item proof-item--test-passed">
+            <span class="checkbox" aria-hidden="true"></span>
+            <span class="proof-item__label">Test Passed</span>
+            <input
+              class="field__input proof-item__input"
+              type="text"
+              placeholder="Test run or suite"
+            />
+          </div>
+          <div class="proof-item proof-item--deployed">
+            <span class="checkbox" aria-hidden="true"></span>
+            <span class="proof-item__label">Deployed</span>
+            <input
+              class="field__input proof-item__input"
+              type="text"
+              placeholder="Environment or URL"
+            />
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+  </html>
