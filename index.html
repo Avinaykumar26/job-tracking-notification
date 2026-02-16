@@ -1,1335 +1,1658 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Job Notification Tracker · KodNest</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-      :root {
-        --color-bg: #F7F6F3;
-        --color-text: #111111;
-        --color-accent: #8B0000;
-        --color-success: #2F6F4E;
-        --color-warning: #B3831F;
 
-        --space-xs: 8px;
-        --space-s: 16px;
-        --space-m: 24px;
-        --space-l: 40px;
-        --space-xl: 64px;
+<head>
+  <meta charset="UTF-8" />
+  <title>Job Notification Tracker · KodNest</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --color-bg: #F7F6F3;
+      --color-text: #111111;
+      --color-accent: #8B0000;
+      --color-success: #2F6F4E;
+      --color-warning: #B3831F;
 
-        --radius-base: 8px;
-        --radius-pill: 999px;
+      --space-xs: 8px;
+      --space-s: 16px;
+      --space-m: 24px;
+      --space-l: 40px;
+      --space-xl: 64px;
 
-        --transition-fast: 180ms ease-in-out;
-      }
+      --radius-base: 8px;
+      --radius-pill: 999px;
 
-      * {
-        box-sizing: border-box;
-      }
+      --transition-fast: 180ms ease-in-out;
+    }
 
-      body {
-        margin: 0;
-        font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
-          "Segoe UI", sans-serif;
-        background-color: var(--color-bg);
-        color: var(--color-text);
-      }
+    * {
+      box-sizing: border-box;
+    }
 
-      .app-shell {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-      }
+    body {
+      margin: 0;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      background-color: var(--color-bg);
+      color: var(--color-text);
+    }
 
-      /* Top navigation */
-      .nav {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: var(--space-s) var(--space-l);
-        border-bottom: 1px solid rgba(17, 17, 17, 0.08);
-        background-color: var(--color-bg);
-      }
+    .app-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-      .nav__brand {
-        font-weight: 600;
-        font-size: 16px;
-        color: var(--color-text);
-        text-decoration: none;
-      }
+    /* Top navigation */
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-s) var(--space-l);
+      border-bottom: 1px solid rgba(17, 17, 17, 0.08);
+      background-color: var(--color-bg);
+    }
 
-      .nav__links {
-        display: flex;
-        align-items: center;
-        gap: 0;
-        list-style: none;
-        margin: 0;
-        padding: 0;
-      }
+    .nav__brand {
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--color-text);
+      text-decoration: none;
+    }
 
-      .nav__link {
-        display: block;
-        padding: var(--space-s) var(--space-m);
-        font-size: 14px;
-        font-weight: 500;
-        color: var(--color-text);
-        text-decoration: none;
-        border-bottom: 2px solid transparent;
-        transition: border-color var(--transition-fast), color var(--transition-fast);
-      }
+    .nav__links {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
 
-      .nav__link:hover {
-        color: var(--color-accent);
-      }
+    .nav__link {
+      display: block;
+      padding: var(--space-s) var(--space-m);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-text);
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+      transition: border-color var(--transition-fast), color var(--transition-fast);
+    }
 
-      .nav__link.is-active {
-        color: var(--color-accent);
-        border-bottom-color: var(--color-accent);
+    .nav__link:hover {
+      color: var(--color-accent);
+    }
+
+    .nav__link.is-active {
+      color: var(--color-accent);
+      border-bottom-color: var(--color-accent);
+    }
+
+    .nav__hamburger {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      border: none;
+      background: transparent;
+      color: var(--color-text);
+      cursor: pointer;
+      border-radius: var(--radius-base);
+      transition: background-color var(--transition-fast);
+    }
+
+    .nav__hamburger:hover {
+      background-color: rgba(17, 17, 17, 0.06);
+    }
+
+    .nav__hamburger-icon {
+      position: relative;
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: currentColor;
+      box-shadow: 0 6px 0 currentColor, 0 -6px 0 currentColor;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+    }
+
+    .nav__hamburger-icon::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 20px;
+      height: 2px;
+      background: currentColor;
+      transform: rotate(90deg);
+      opacity: 0;
+      transition: opacity var(--transition-fast);
+    }
+
+    .nav__hamburger[aria-expanded="true"] .nav__hamburger-icon {
+      transform: rotate(45deg);
+      box-shadow: none;
+    }
+
+    .nav__hamburger[aria-expanded="true"] .nav__hamburger-icon::after {
+      transform: rotate(-90deg);
+      opacity: 1;
+    }
+
+    .nav__drawer {
+      display: none;
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: var(--color-bg);
+      z-index: 100;
+      padding: var(--space-xl) var(--space-l) var(--space-l);
+      overflow: auto;
+    }
+
+    .nav__drawer.is-open {
+      display: block;
+    }
+
+    .nav__drawer .nav__links {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+    }
+
+    .nav__drawer .nav__link {
+      padding: var(--space-m);
+      border-bottom: 1px solid rgba(17, 17, 17, 0.08);
+      border-bottom-width: 1px;
+    }
+
+    .nav__drawer-close {
+      position: absolute;
+      top: var(--space-s);
+      right: var(--space-s);
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      border: none;
+      background: transparent;
+      color: var(--color-text);
+      cursor: pointer;
+      border-radius: var(--radius-base);
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    @media (max-width: 768px) {
+      .nav__links:not(.nav__drawer .nav__links) {
+        display: none;
       }
 
       .nav__hamburger {
-        display: none;
-        align-items: center;
-        justify-content: center;
-        width: 44px;
-        height: 44px;
-        padding: 0;
-        border: none;
-        background: transparent;
-        color: var(--color-text);
-        cursor: pointer;
-        border-radius: var(--radius-base);
-        transition: background-color var(--transition-fast);
+        display: flex;
       }
+    }
 
-      .nav__hamburger:hover {
-        background-color: rgba(17, 17, 17, 0.06);
-      }
-
-      .nav__hamburger-icon {
-        position: relative;
-        display: block;
-        width: 20px;
-        height: 2px;
-        background: currentColor;
-        box-shadow: 0 6px 0 currentColor, 0 -6px 0 currentColor;
-        transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
-      }
-
-      .nav__hamburger-icon::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 20px;
-        height: 2px;
-        background: currentColor;
-        transform: rotate(90deg);
-        opacity: 0;
-        transition: opacity var(--transition-fast);
-      }
-
-      .nav__hamburger[aria-expanded="true"] .nav__hamburger-icon {
-        transform: rotate(45deg);
-        box-shadow: none;
-      }
-
-      .nav__hamburger[aria-expanded="true"] .nav__hamburger-icon::after {
-        transform: rotate(-90deg);
-        opacity: 1;
-      }
-
+    @media (min-width: 769px) {
       .nav__drawer {
-        display: none;
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        background: var(--color-bg);
-        z-index: 100;
-        padding: var(--space-xl) var(--space-l) var(--space-l);
-        overflow: auto;
-      }
-
-      .nav__drawer.is-open {
-        display: block;
-      }
-
-      .nav__drawer .nav__links {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0;
-      }
-
-      .nav__drawer .nav__link {
-        padding: var(--space-m);
-        border-bottom: 1px solid rgba(17, 17, 17, 0.08);
-        border-bottom-width: 1px;
-      }
-
-      .nav__drawer-close {
-        position: absolute;
-        top: var(--space-s);
-        right: var(--space-s);
-        width: 44px;
-        height: 44px;
-        padding: 0;
-        border: none;
-        background: transparent;
-        color: var(--color-text);
-        cursor: pointer;
-        border-radius: var(--radius-base);
-        font-size: 24px;
-        line-height: 1;
-      }
-
-      @media (max-width: 768px) {
-        .nav__links:not(.nav__drawer .nav__links) {
-          display: none;
-        }
-
-        .nav__hamburger {
-          display: flex;
-        }
-      }
-
-      @media (min-width: 769px) {
-        .nav__drawer {
-          display: none !important;
-        }
-      }
-
-      /* Route placeholder pages */
-      .main {
-        flex: 1;
-        padding: var(--space-xl) var(--space-l);
-      }
-
-      .route-page {
-        display: none;
-        max-width: 720px;
-      }
-
-      .route-page.is-active {
-        display: block;
-      }
-
-      .route-page__title {
-        font-family: "Georgia", "Times New Roman", serif;
-        font-size: 36px;
-        font-weight: 600;
-        line-height: 1.3;
-        margin: 0 0 var(--space-m);
-        color: var(--color-text);
-      }
-
-      .route-page__subtitle {
-        font-size: 16px;
-        line-height: 1.6;
-        color: rgba(17, 17, 17, 0.7);
-        margin: 0;
-      }
-
-      /* Landing page */
-      .landing {
-        text-align: center;
-        padding: var(--space-xl) var(--space-l);
-        max-width: 640px;
-        margin: 0 auto;
-      }
-
-      .landing__headline {
-        font-family: "Georgia", "Times New Roman", serif;
-        font-size: clamp(32px, 5vw, 48px);
-        font-weight: 600;
-        line-height: 1.25;
-        margin: 0 0 var(--space-m);
-        color: var(--color-text);
-      }
-
-      .landing__subtext {
-        font-size: 18px;
-        line-height: 1.6;
-        color: rgba(17, 17, 17, 0.75);
-        margin: 0 0 var(--space-xl);
-      }
-
-      .landing__cta {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 14px 28px;
-        font-size: 16px;
-        font-weight: 600;
-        color: var(--color-bg);
-        background: var(--color-accent);
-        border: 1px solid var(--color-accent);
-        border-radius: var(--radius-pill);
-        text-decoration: none;
-        transition: background-color var(--transition-fast), border-color var(--transition-fast);
-      }
-
-      .landing__cta:hover {
-        background: rgba(139, 0, 0, 0.9);
-        border-color: rgba(139, 0, 0, 0.9);
-      }
-
-      /* Empty states */
-      .empty-state {
-        padding: var(--space-xl) 0;
-        max-width: 480px;
-      }
-
-      .empty-state__title {
-        font-family: "Georgia", "Times New Roman", serif;
-        font-size: 28px;
-        font-weight: 600;
-        line-height: 1.3;
-        margin: 0 0 var(--space-s);
-        color: var(--color-text);
-      }
-
-      .empty-state__text {
-        font-size: 16px;
-        line-height: 1.6;
-        color: rgba(17, 17, 17, 0.7);
-        margin: 0;
-      }
-
-      /* Settings form */
-      .card {
-        border-radius: var(--radius-base);
-        border: 1px solid rgba(17, 17, 17, 0.1);
-        background: rgba(17, 17, 17, 0.02);
-        padding: var(--space-l);
-        max-width: 520px;
-      }
-
-      .card__title {
-        font-family: "Georgia", "Times New Roman", serif;
-        font-size: 24px;
-        font-weight: 600;
-        margin: 0 0 var(--space-m);
-        color: var(--color-text);
-      }
-
-      .field {
-        margin-bottom: var(--space-m);
-      }
-
-      .field__label {
-        display: block;
-        font-size: 14px;
-        font-weight: 500;
-        margin-bottom: 6px;
-        color: var(--color-text);
-      }
-
-      .field__input,
-      .field__select {
-        width: 100%;
-        font-family: inherit;
-        font-size: 14px;
-        padding: 10px 14px;
-        border-radius: var(--radius-base);
-        border: 1px solid rgba(17, 17, 17, 0.18);
-        background: var(--color-bg);
-        color: var(--color-text);
-        transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-      }
-
-      .field__input:focus,
-      .field__select:focus {
-        outline: none;
-        border-color: var(--color-accent);
-        box-shadow: 0 0 0 1px var(--color-accent);
-      }
-
-      .field__hint {
-        font-size: 13px;
-        color: rgba(17, 17, 17, 0.6);
-        margin-top: 4px;
-      }
-
-      .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px 20px;
-        font-size: 14px;
-        font-weight: 500;
-        border-radius: var(--radius-pill);
-        cursor: pointer;
-        border: 1px solid transparent;
-        background: transparent;
-        color: var(--color-text);
-        transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
-      }
-
-      .btn--primary {
-        background: var(--color-accent);
-        border-color: var(--color-accent);
-        color: var(--color-bg);
-      }
-
-      .btn--primary:hover {
-        background: rgba(139, 0, 0, 0.9);
-        border-color: rgba(139, 0, 0, 0.9);
-      }
-
-      .btn--secondary {
-        border-color: rgba(17, 17, 17, 0.25);
-      }
-
-      .btn--secondary:hover {
-        background: rgba(17, 17, 17, 0.04);
-        border-color: rgba(17, 17, 17, 0.35);
-      }
-
-      /* Proof placeholder */
-      .proof-placeholder {
-        padding: var(--space-l) 0;
-        max-width: 560px;
-      }
-
-      .proof-placeholder__title {
-        font-family: "Georgia", "Times New Roman", serif;
-        font-size: 28px;
-        font-weight: 600;
-        margin: 0 0 var(--space-s);
-        color: var(--color-text);
-      }
-
-      .proof-placeholder__text {
-        font-size: 16px;
-        line-height: 1.6;
-        color: rgba(17, 17, 17, 0.7);
-        margin: 0;
-      }
-
-      /* Filter bar */
-      .filter-bar {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--space-s);
-        align-items: flex-end;
-        margin-bottom: var(--space-l);
-        padding-bottom: var(--space-m);
-        border-bottom: 1px solid rgba(17, 17, 17, 0.08);
-      }
-
-      .filter-bar .field {
-        margin-bottom: 0;
-      }
-
-      .filter-bar .field__label {
-        font-size: 12px;
-        margin-bottom: 4px;
-      }
-
-      .filter-bar .field__input,
-      .filter-bar .field__select {
-        min-width: 120px;
-        padding: 8px 12px;
-        font-size: 13px;
-      }
-
-      .filter-bar .field--search .field__input {
-        min-width: 200px;
-      }
-
-      /* Job cards */
-      .jobs-section__title {
-        font-family: "Georgia", "Times New Roman", serif;
-        font-size: 28px;
-        font-weight: 600;
-        margin: 0 0 var(--space-m);
-        color: var(--color-text);
-      }
-
-      .job-grid {
-        display: grid;
-        gap: var(--space-m);
-      }
-
-      .job-card {
-        border-radius: var(--radius-base);
-        border: 1px solid rgba(17, 17, 17, 0.1);
-        background: rgba(255, 255, 255, 0.6);
-        padding: var(--space-m);
-        transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-      }
-
-      .job-card:hover {
-        border-color: rgba(17, 17, 17, 0.15);
-        box-shadow: 0 2px 12px rgba(17, 17, 17, 0.06);
-      }
-
-      .job-card__title {
-        font-size: 17px;
-        font-weight: 600;
-        margin: 0 0 var(--space-xs);
-        color: var(--color-text);
-      }
-
-      .job-card__company {
-        font-size: 14px;
-        color: rgba(17, 17, 17, 0.75);
-        margin: 0 0 var(--space-s);
-      }
-
-      .job-card__meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--space-s);
-        font-size: 13px;
-        color: rgba(17, 17, 17, 0.7);
-        margin-bottom: var(--space-s);
-      }
-
-      .job-card__meta span {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-      }
-
-      .job-card__footer {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--space-s);
-        margin-top: var(--space-s);
-        padding-top: var(--space-s);
-        border-top: 1px solid rgba(17, 17, 17, 0.06);
-      }
-
-      .job-card__badges {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-      }
-
-      .badge {
-        display: inline-block;
-        padding: 4px 10px;
-        font-size: 11px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.02em;
-        border-radius: var(--radius-base);
-        background: rgba(17, 17, 17, 0.06);
-        color: rgba(17, 17, 17, 0.8);
-      }
-
-      .badge--linkedin { background: rgba(10, 102, 194, 0.12); color: #0a66c2; }
-      .badge--naukri { background: rgba(78, 205, 196, 0.2); color: #2d8a82; }
-      .badge--indeed { background: rgba(43, 90, 186, 0.12); color: #2557a7; }
-
-      .job-card__posted {
-        font-size: 12px;
-        color: rgba(17, 17, 17, 0.55);
-      }
-
-      .job-card__actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-
-      .btn--sm {
-        padding: 6px 14px;
-        font-size: 13px;
-      }
-
-      .btn--saved {
-        border-color: var(--color-success);
-        color: var(--color-success);
-      }
-
-      .btn--saved:hover {
-        background: rgba(47, 111, 78, 0.08);
-      }
-
-      /* Modal */
-      .modal-backdrop {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(17, 17, 17, 0.4);
-        z-index: 200;
-        align-items: center;
-        justify-content: center;
-        padding: var(--space-l);
-      }
-
-      .modal-backdrop.is-open {
-        display: flex;
-      }
-
-      .modal {
-        background: var(--color-bg);
-        border-radius: var(--radius-base);
-        border: 1px solid rgba(17, 17, 17, 0.12);
-        max-width: 520px;
-        width: 100%;
-        max-height: 85vh;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        box-shadow: 0 20px 60px rgba(17, 17, 17, 0.15);
-      }
-
-      .modal__header {
-        padding: var(--space-m) var(--space-l);
-        border-bottom: 1px solid rgba(17, 17, 17, 0.08);
-        flex-shrink: 0;
-      }
-
-      .modal__title {
-        font-family: "Georgia", "Times New Roman", serif;
-        font-size: 20px;
-        font-weight: 600;
-        margin: 0 0 4px;
-      }
-
-      .modal__company {
-        font-size: 14px;
-        color: rgba(17, 17, 17, 0.7);
-        margin: 0;
-      }
-
-      .modal__body {
-        padding: var(--space-l);
-        overflow: auto;
-        font-size: 14px;
-        line-height: 1.6;
-        color: rgba(17, 17, 17, 0.85);
-      }
-
-      .modal__body p {
-        margin: 0 0 var(--space-s);
-      }
-
-      .modal__skills {
-        margin-top: var(--space-m);
-      }
-
-      .modal__skills-title {
-        font-size: 12px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-        color: rgba(17, 17, 17, 0.6);
-        margin: 0 0 var(--space-xs);
-      }
-
-      .modal__skills-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        margin: 0;
-      }
-
-      .modal__skills-list span {
-        padding: 4px 10px;
-        font-size: 12px;
-        border-radius: var(--radius-base);
-        background: rgba(17, 17, 17, 0.06);
-        color: var(--color-text);
-      }
-
-      .modal__footer {
-        padding: var(--space-m) var(--space-l);
-        border-top: 1px solid rgba(17, 17, 17, 0.08);
-        display: flex;
-        gap: var(--space-s);
-        flex-wrap: wrap;
-      }
-
-      .route-page--wide {
-        max-width: none;
-      }
-
-      .prefs-banner {
-        padding: var(--space-s) var(--space-m);
-        margin-bottom: var(--space-m);
-        border-radius: var(--radius-base);
-        border: 1px solid rgba(17, 17, 17, 0.12);
-        background: rgba(17, 17, 17, 0.04);
-        font-size: 14px;
-        color: rgba(17, 17, 17, 0.85);
-      }
-
-      .prefs-banner a {
-        color: var(--color-accent);
-        font-weight: 500;
-      }
-
-      .checkbox-group {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--space-m);
-        margin-top: 6px;
-      }
-
-      .checkbox-group label {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 14px;
-        font-weight: 400;
-        cursor: pointer;
-      }
-
-      .checkbox-group input[type="checkbox"] {
-        width: 18px;
-        height: 18px;
-        accent-color: var(--color-accent);
-      }
-
-      .field__select[multiple] {
-        min-height: 100px;
-      }
-
-      .slider-row {
-        display: flex;
-        align-items: center;
-        gap: var(--space-s);
-        margin-top: 6px;
-      }
-
-      .slider-row input[type="range"] {
-        flex: 1;
-        min-width: 120px;
-        height: 8px;
-        accent-color: var(--color-accent);
-      }
-
-      .slider-row .slider-value {
-        font-size: 14px;
-        font-weight: 600;
-        min-width: 2.5em;
-      }
-
-      .toggle-row {
-        display: flex;
-        align-items: center;
-        gap: var(--space-s);
-        margin-bottom: var(--space-m);
-      }
-
-      .toggle-row label {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 14px;
-        cursor: pointer;
-      }
-
-      .toggle-row input[type="checkbox"] {
-        width: 18px;
-        height: 18px;
-        accent-color: var(--color-accent);
-      }
-
-      .badge--score-green { background: rgba(47, 111, 78, 0.18); color: var(--color-success); }
-      .badge--score-amber { background: rgba(179, 131, 31, 0.2); color: var(--color-warning); }
-      .badge--score-neutral { background: rgba(17, 17, 17, 0.1); color: rgba(17, 17, 17, 0.8); }
-      .badge--score-low { background: rgba(17, 17, 17, 0.06); color: rgba(17, 17, 17, 0.5); }
-    </style>
-  </head>
-  <body>
-    <div class="app-shell">
-      <header class="nav">
-        <a href="#/" class="nav__brand">Job Notification Tracker</a>
-        <ul class="nav__links" id="nav-links">
-          <li><a class="nav__link" href="#/dashboard" data-route="dashboard">Dashboard</a></li>
-          <li><a class="nav__link" href="#/saved" data-route="saved">Saved</a></li>
-          <li><a class="nav__link" href="#/digest" data-route="digest">Digest</a></li>
-          <li><a class="nav__link" href="#/settings" data-route="settings">Settings</a></li>
-          <li><a class="nav__link" href="#/proof" data-route="proof">Proof</a></li>
-        </ul>
-        <button type="button" class="nav__hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="nav-drawer">
-          <span class="nav__hamburger-icon"></span>
-        </button>
-      </header>
-
-      <div class="nav__drawer" id="nav-drawer" role="dialog" aria-label="Navigation menu">
-        <button type="button" class="nav__drawer-close" id="nav-drawer-close" aria-label="Close menu">&times;</button>
-        <ul class="nav__links">
-          <li><a class="nav__link" href="#/dashboard" data-route="dashboard">Dashboard</a></li>
-          <li><a class="nav__link" href="#/saved" data-route="saved">Saved</a></li>
-          <li><a class="nav__link" href="#/digest" data-route="digest">Digest</a></li>
-          <li><a class="nav__link" href="#/settings" data-route="settings">Settings</a></li>
-          <li><a class="nav__link" href="#/proof" data-route="proof">Proof</a></li>
-        </ul>
-      </div>
-
-      <main class="main" id="route-outlet">
-        <section class="route-page" id="page-landing" data-route="landing">
-          <div class="landing">
-            <h1 class="landing__headline">Stop Missing The Right Jobs.</h1>
-            <p class="landing__subtext">Precision-matched job discovery delivered daily at 9AM.</p>
-            <a href="#/settings" class="landing__cta">Start Tracking</a>
+        display: none !important;
+      }
+    }
+
+    /* Route placeholder pages */
+    .main {
+      flex: 1;
+      padding: var(--space-xl) var(--space-l);
+    }
+
+    .route-page {
+      display: none;
+      max-width: 720px;
+    }
+
+    .route-page.is-active {
+      display: block;
+    }
+
+    .route-page__title {
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: 36px;
+      font-weight: 600;
+      line-height: 1.3;
+      margin: 0 0 var(--space-m);
+      color: var(--color-text);
+    }
+
+    .route-page__subtitle {
+      font-size: 16px;
+      line-height: 1.6;
+      color: rgba(17, 17, 17, 0.7);
+      margin: 0;
+    }
+
+    /* Landing page */
+    .landing {
+      text-align: center;
+      padding: var(--space-xl) var(--space-l);
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .landing__headline {
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 600;
+      line-height: 1.25;
+      margin: 0 0 var(--space-m);
+      color: var(--color-text);
+    }
+
+    .landing__subtext {
+      font-size: 18px;
+      line-height: 1.6;
+      color: rgba(17, 17, 17, 0.75);
+      margin: 0 0 var(--space-xl);
+    }
+
+    .landing__cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 28px;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-bg);
+      background: var(--color-accent);
+      border: 1px solid var(--color-accent);
+      border-radius: var(--radius-pill);
+      text-decoration: none;
+      transition: background-color var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    .landing__cta:hover {
+      background: rgba(139, 0, 0, 0.9);
+      border-color: rgba(139, 0, 0, 0.9);
+    }
+
+    /* Empty states */
+    .empty-state {
+      padding: var(--space-xl) 0;
+      max-width: 480px;
+    }
+
+    .empty-state__title {
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 1.3;
+      margin: 0 0 var(--space-s);
+      color: var(--color-text);
+    }
+
+    .empty-state__text {
+      font-size: 16px;
+      line-height: 1.6;
+      color: rgba(17, 17, 17, 0.7);
+      margin: 0;
+    }
+
+    /* Settings form */
+    .card {
+      border-radius: var(--radius-base);
+      border: 1px solid rgba(17, 17, 17, 0.1);
+      background: rgba(17, 17, 17, 0.02);
+      padding: var(--space-l);
+      max-width: 520px;
+    }
+
+    .card__title {
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: 24px;
+      font-weight: 600;
+      margin: 0 0 var(--space-m);
+      color: var(--color-text);
+    }
+
+    .field {
+      margin-bottom: var(--space-m);
+    }
+
+    .field__label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--color-text);
+    }
+
+    .field__input,
+    .field__select {
+      width: 100%;
+      font-family: inherit;
+      font-size: 14px;
+      padding: 10px 14px;
+      border-radius: var(--radius-base);
+      border: 1px solid rgba(17, 17, 17, 0.18);
+      background: var(--color-bg);
+      color: var(--color-text);
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .field__input:focus,
+    .field__select:focus {
+      outline: none;
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 1px var(--color-accent);
+    }
+
+    .field__hint {
+      font-size: 13px;
+      color: rgba(17, 17, 17, 0.6);
+      margin-top: 4px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--color-text);
+      transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+    }
+
+    .btn--primary {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      color: var(--color-bg);
+    }
+
+    .btn--primary:hover {
+      background: rgba(139, 0, 0, 0.9);
+      border-color: rgba(139, 0, 0, 0.9);
+    }
+
+    .btn--secondary {
+      border-color: rgba(17, 17, 17, 0.25);
+    }
+
+    .btn--secondary:hover {
+      background: rgba(17, 17, 17, 0.04);
+      border-color: rgba(17, 17, 17, 0.35);
+    }
+
+    /* Proof placeholder */
+    .proof-placeholder {
+      padding: var(--space-l) 0;
+      max-width: 560px;
+    }
+
+    .proof-placeholder__title {
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: 28px;
+      font-weight: 600;
+      margin: 0 0 var(--space-s);
+      color: var(--color-text);
+    }
+
+    .proof-placeholder__text {
+      font-size: 16px;
+      line-height: 1.6;
+      color: rgba(17, 17, 17, 0.7);
+      margin: 0;
+    }
+
+    /* Filter bar */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-s);
+      align-items: flex-end;
+      margin-bottom: var(--space-l);
+      padding-bottom: var(--space-m);
+      border-bottom: 1px solid rgba(17, 17, 17, 0.08);
+    }
+
+    .filter-bar .field {
+      margin-bottom: 0;
+    }
+
+    .filter-bar .field__label {
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .filter-bar .field__input,
+    .filter-bar .field__select {
+      min-width: 120px;
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+
+    .filter-bar .field--search .field__input {
+      min-width: 200px;
+    }
+
+    /* Job cards */
+    .jobs-section__title {
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: 28px;
+      font-weight: 600;
+      margin: 0 0 var(--space-m);
+      color: var(--color-text);
+    }
+
+    .job-grid {
+      display: grid;
+      gap: var(--space-m);
+    }
+
+    .job-card {
+      border-radius: var(--radius-base);
+      border: 1px solid rgba(17, 17, 17, 0.1);
+      background: rgba(255, 255, 255, 0.6);
+      padding: var(--space-m);
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .job-card:hover {
+      border-color: rgba(17, 17, 17, 0.15);
+      box-shadow: 0 2px 12px rgba(17, 17, 17, 0.06);
+    }
+
+    .job-card__title {
+      font-size: 17px;
+      font-weight: 600;
+      margin: 0 0 var(--space-xs);
+      color: var(--color-text);
+    }
+
+    .job-card__company {
+      font-size: 14px;
+      color: rgba(17, 17, 17, 0.75);
+      margin: 0 0 var(--space-s);
+    }
+
+    .job-card__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-s);
+      font-size: 13px;
+      color: rgba(17, 17, 17, 0.7);
+      margin-bottom: var(--space-s);
+    }
+
+    .job-card__meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .job-card__footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-s);
+      margin-top: var(--space-s);
+      padding-top: var(--space-s);
+      border-top: 1px solid rgba(17, 17, 17, 0.06);
+    }
+
+    .job-card__badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      border-radius: var(--radius-base);
+      background: rgba(17, 17, 17, 0.06);
+      color: rgba(17, 17, 17, 0.8);
+    }
+
+    .badge--linkedin {
+      background: rgba(10, 102, 194, 0.12);
+      color: #0a66c2;
+    }
+
+    .badge--naukri {
+      background: rgba(78, 205, 196, 0.2);
+      color: #2d8a82;
+    }
+
+    .badge--indeed {
+      background: rgba(43, 90, 186, 0.12);
+      color: #2557a7;
+    }
+
+    .job-card__posted {
+      font-size: 12px;
+      color: rgba(17, 17, 17, 0.55);
+    }
+
+    .job-card__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .btn--sm {
+      padding: 6px 14px;
+      font-size: 13px;
+    }
+
+    .btn--saved {
+      border-color: var(--color-success);
+      color: var(--color-success);
+    }
+
+    .btn--saved:hover {
+      background: rgba(47, 111, 78, 0.08);
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 17, 17, 0.4);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-l);
+    }
+
+    .modal-backdrop.is-open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--color-bg);
+      border-radius: var(--radius-base);
+      border: 1px solid rgba(17, 17, 17, 0.12);
+      max-width: 520px;
+      width: 100%;
+      max-height: 85vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 60px rgba(17, 17, 17, 0.15);
+    }
+
+    .modal__header {
+      padding: var(--space-m) var(--space-l);
+      border-bottom: 1px solid rgba(17, 17, 17, 0.08);
+      flex-shrink: 0;
+    }
+
+    .modal__title {
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0 0 4px;
+    }
+
+    .modal__company {
+      font-size: 14px;
+      color: rgba(17, 17, 17, 0.7);
+      margin: 0;
+    }
+
+    .modal__body {
+      padding: var(--space-l);
+      overflow: auto;
+      font-size: 14px;
+      line-height: 1.6;
+      color: rgba(17, 17, 17, 0.85);
+    }
+
+    .modal__body p {
+      margin: 0 0 var(--space-s);
+    }
+
+    .modal__skills {
+      margin-top: var(--space-m);
+    }
+
+    .modal__skills-title {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: rgba(17, 17, 17, 0.6);
+      margin: 0 0 var(--space-xs);
+    }
+
+    .modal__skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0;
+    }
+
+    .modal__skills-list span {
+      padding: 4px 10px;
+      font-size: 12px;
+      border-radius: var(--radius-base);
+      background: rgba(17, 17, 17, 0.06);
+      color: var(--color-text);
+    }
+
+    .modal__footer {
+      padding: var(--space-m) var(--space-l);
+      border-top: 1px solid rgba(17, 17, 17, 0.08);
+      display: flex;
+      gap: var(--space-s);
+      flex-wrap: wrap;
+    }
+
+    .route-page--wide {
+      max-width: none;
+    }
+
+    .prefs-banner {
+      padding: var(--space-s) var(--space-m);
+      margin-bottom: var(--space-m);
+      border-radius: var(--radius-base);
+      border: 1px solid rgba(17, 17, 17, 0.12);
+      background: rgba(17, 17, 17, 0.04);
+      font-size: 14px;
+      color: rgba(17, 17, 17, 0.85);
+    }
+
+    .prefs-banner a {
+      color: var(--color-accent);
+      font-weight: 500;
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-m);
+      margin-top: 6px;
+    }
+
+    .checkbox-group label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 400;
+      cursor: pointer;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--color-accent);
+    }
+
+    .field__select[multiple] {
+      min-height: 100px;
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-s);
+      margin-top: 6px;
+    }
+
+    .slider-row input[type="range"] {
+      flex: 1;
+      min-width: 120px;
+      height: 8px;
+      accent-color: var(--color-accent);
+    }
+
+    .slider-row .slider-value {
+      font-size: 14px;
+      font-weight: 600;
+      min-width: 2.5em;
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-s);
+      margin-bottom: var(--space-m);
+    }
+
+    .toggle-row label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .toggle-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--color-accent);
+    }
+
+    .badge--score-green {
+      background: rgba(47, 111, 78, 0.18);
+      color: var(--color-success);
+    }
+
+    .badge--score-amber {
+      background: rgba(179, 131, 31, 0.2);
+      color: var(--color-warning);
+    }
+
+    .badge--score-neutral {
+      background: rgba(17, 17, 17, 0.1);
+      color: rgba(17, 17, 17, 0.8);
+    }
+
+    .badge--score-low {
+      background: rgba(17, 17, 17, 0.06);
+      color: rgba(17, 17, 17, 0.5);
+    }
+
+    .digest-no-prefs,
+    .digest-no-matches {
+      padding: var(--space-l);
+      text-align: center;
+      max-width: 480px;
+    }
+
+    .digest-no-prefs .empty-state__title,
+    .digest-no-matches .empty-state__title {
+      margin-bottom: var(--space-s);
+    }
+
+    .digest-no-prefs a {
+      color: var(--color-accent);
+      font-weight: 500;
+    }
+
+    .digest-generate-row {
+      margin-bottom: var(--space-m);
+    }
+
+    .digest-card {
+      background: #ffffff;
+      border-radius: var(--radius-base);
+      border: 1px solid rgba(17, 17, 17, 0.1);
+      box-shadow: 0 1px 3px rgba(17, 17, 17, 0.06);
+      overflow: hidden;
+      max-width: 600px;
+    }
+
+    .digest-card__header {
+      padding: var(--space-l);
+      border-bottom: 1px solid rgba(17, 17, 17, 0.08);
+    }
+
+    .digest-card__title {
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: 22px;
+      font-weight: 600;
+      margin: 0 0 4px;
+      color: var(--color-text);
+    }
+
+    .digest-card__subtext {
+      font-size: 14px;
+      color: rgba(17, 17, 17, 0.6);
+      margin: 0;
+    }
+
+    .digest-card__jobs {
+      padding: 0;
+    }
+
+    .digest-job {
+      padding: var(--space-m) var(--space-l);
+      border-bottom: 1px solid rgba(17, 17, 17, 0.06);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-s);
+    }
+
+    .digest-job:last-child {
+      border-bottom: none;
+    }
+
+    .digest-job__main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .digest-job__title {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 0 0 4px;
+    }
+
+    .digest-job__meta {
+      font-size: 13px;
+      color: rgba(17, 17, 17, 0.7);
+      margin: 0;
+    }
+
+    .digest-job__score {
+      flex-shrink: 0;
+    }
+
+    .digest-card__footer {
+      padding: var(--space-m) var(--space-l);
+      border-top: 1px solid rgba(17, 17, 17, 0.08);
+      font-size: 13px;
+      color: rgba(17, 17, 17, 0.6);
+    }
+
+    .digest-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-s);
+      margin-top: var(--space-m);
+    }
+
+    .digest-note {
+      font-size: 12px;
+      color: rgba(17, 17, 17, 0.5);
+      margin-top: var(--space-m);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app-shell">
+    <header class="nav">
+      <a href="#/" class="nav__brand">Job Notification Tracker</a>
+      <ul class="nav__links" id="nav-links">
+        <li><a class="nav__link" href="#/dashboard" data-route="dashboard">Dashboard</a></li>
+        <li><a class="nav__link" href="#/saved" data-route="saved">Saved</a></li>
+        <li><a class="nav__link" href="#/digest" data-route="digest">Digest</a></li>
+        <li><a class="nav__link" href="#/settings" data-route="settings">Settings</a></li>
+        <li><a class="nav__link" href="#/proof" data-route="proof">Proof</a></li>
+      </ul>
+      <button type="button" class="nav__hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false"
+        aria-controls="nav-drawer">
+        <span class="nav__hamburger-icon"></span>
+      </button>
+    </header>
+
+    <div class="nav__drawer" id="nav-drawer" role="dialog" aria-label="Navigation menu">
+      <button type="button" class="nav__drawer-close" id="nav-drawer-close" aria-label="Close menu">&times;</button>
+      <ul class="nav__links">
+        <li><a class="nav__link" href="#/dashboard" data-route="dashboard">Dashboard</a></li>
+        <li><a class="nav__link" href="#/saved" data-route="saved">Saved</a></li>
+        <li><a class="nav__link" href="#/digest" data-route="digest">Digest</a></li>
+        <li><a class="nav__link" href="#/settings" data-route="settings">Settings</a></li>
+        <li><a class="nav__link" href="#/proof" data-route="proof">Proof</a></li>
+      </ul>
+    </div>
+
+    <main class="main" id="route-outlet">
+      <section class="route-page" id="page-landing" data-route="landing">
+        <div class="landing">
+          <h1 class="landing__headline">Stop Missing The Right Jobs.</h1>
+          <p class="landing__subtext">Precision-matched job discovery delivered daily at 9AM.</p>
+          <a href="#/settings" class="landing__cta">Start Tracking</a>
+        </div>
+      </section>
+      <section class="route-page route-page--wide" id="page-dashboard" data-route="dashboard">
+        <div class="filter-bar" id="dashboard-filter-bar">
+          <div class="field field--search">
+            <label class="field__label" for="filter-keyword">Search</label>
+            <input id="filter-keyword" class="field__input" type="text" placeholder="Title or company..." />
           </div>
-        </section>
-        <section class="route-page route-page--wide" id="page-dashboard" data-route="dashboard">
-          <div class="filter-bar" id="dashboard-filter-bar">
-            <div class="field field--search">
-              <label class="field__label" for="filter-keyword">Search</label>
-              <input id="filter-keyword" class="field__input" type="text" placeholder="Title or company..." />
-            </div>
-            <div class="field">
-              <label class="field__label" for="filter-location">Location</label>
-              <select id="filter-location" class="field__select">
-                <option value="">All locations</option>
-              </select>
-            </div>
-            <div class="field">
-              <label class="field__label" for="filter-mode">Mode</label>
-              <select id="filter-mode" class="field__select">
-                <option value="">All</option>
-                <option value="Remote">Remote</option>
-                <option value="Hybrid">Hybrid</option>
-                <option value="Onsite">Onsite</option>
-              </select>
-            </div>
-            <div class="field">
-              <label class="field__label" for="filter-experience">Experience</label>
-              <select id="filter-experience" class="field__select">
-                <option value="">All</option>
-                <option value="Fresher">Fresher</option>
-                <option value="0-1">0-1</option>
-                <option value="1-3">1-3</option>
-                <option value="3-5">3-5</option>
-              </select>
-            </div>
-            <div class="field">
-              <label class="field__label" for="filter-source">Source</label>
-              <select id="filter-source" class="field__select">
-                <option value="">All</option>
-                <option value="LinkedIn">LinkedIn</option>
-                <option value="Naukri">Naukri</option>
-                <option value="Indeed">Indeed</option>
-              </select>
-            </div>
-            <div class="field">
-              <label class="field__label" for="filter-sort">Sort</label>
-              <select id="filter-sort" class="field__select">
-                <option value="latest">Latest</option>
-                <option value="oldest">Oldest</option>
-                <option value="match">Match Score</option>
-                <option value="salary">Salary</option>
-                <option value="company">Company A–Z</option>
-              </select>
-            </div>
+          <div class="field">
+            <label class="field__label" for="filter-location">Location</label>
+            <select id="filter-location" class="field__select">
+              <option value="">All locations</option>
+            </select>
           </div>
-          <div class="prefs-banner" id="dashboard-prefs-banner" style="display: none;">
-            Set your preferences to activate intelligent matching.
-            <a href="#/settings">Go to Settings</a>
+          <div class="field">
+            <label class="field__label" for="filter-mode">Mode</label>
+            <select id="filter-mode" class="field__select">
+              <option value="">All</option>
+              <option value="Remote">Remote</option>
+              <option value="Hybrid">Hybrid</option>
+              <option value="Onsite">Onsite</option>
+            </select>
           </div>
-          <div class="toggle-row">
-            <label>
-              <input type="checkbox" id="filter-above-threshold" />
-              Show only jobs above my threshold
-            </label>
+          <div class="field">
+            <label class="field__label" for="filter-experience">Experience</label>
+            <select id="filter-experience" class="field__select">
+              <option value="">All</option>
+              <option value="Fresher">Fresher</option>
+              <option value="0-1">0-1</option>
+              <option value="1-3">1-3</option>
+              <option value="3-5">3-5</option>
+            </select>
           </div>
-          <h2 class="jobs-section__title">Jobs</h2>
-          <div class="job-grid" id="dashboard-job-list"></div>
-          <div class="empty-state" id="dashboard-empty">
-            <h2 class="empty-state__title">No roles match your criteria</h2>
-            <p class="empty-state__text">Adjust filters or lower threshold.</p>
+          <div class="field">
+            <label class="field__label" for="filter-source">Source</label>
+            <select id="filter-source" class="field__select">
+              <option value="">All</option>
+              <option value="LinkedIn">LinkedIn</option>
+              <option value="Naukri">Naukri</option>
+              <option value="Indeed">Indeed</option>
+            </select>
           </div>
-        </section>
-        <section class="route-page route-page--wide" id="page-saved" data-route="saved">
-          <h2 class="jobs-section__title">Saved jobs</h2>
-          <div class="job-grid" id="saved-job-list"></div>
-          <div class="empty-state" id="saved-empty">
-            <h2 class="empty-state__title">Saved</h2>
-            <p class="empty-state__text">Jobs you save will appear here. Nothing saved yet.</p>
+          <div class="field">
+            <label class="field__label" for="filter-sort">Sort</label>
+            <select id="filter-sort" class="field__select">
+              <option value="latest">Latest</option>
+              <option value="oldest">Oldest</option>
+              <option value="match">Match Score</option>
+              <option value="salary">Salary</option>
+              <option value="company">Company A–Z</option>
+            </select>
           </div>
-        </section>
-        <section class="route-page" id="page-digest" data-route="digest">
-          <div class="empty-state">
-            <h2 class="empty-state__title">Digest</h2>
-            <p class="empty-state__text">Your daily digest will be built in a later step. Check back soon.</p>
+        </div>
+        <div class="prefs-banner" id="dashboard-prefs-banner" style="display: none;">
+          Set your preferences to activate intelligent matching.
+          <a href="#/settings">Go to Settings</a>
+        </div>
+        <div class="toggle-row">
+          <label>
+            <input type="checkbox" id="filter-above-threshold" />
+            Show only jobs above my threshold
+          </label>
+        </div>
+        <h2 class="jobs-section__title">Jobs</h2>
+        <div class="job-grid" id="dashboard-job-list"></div>
+        <div class="empty-state" id="dashboard-empty">
+          <h2 class="empty-state__title">No roles match your criteria</h2>
+          <p class="empty-state__text">Adjust filters or lower threshold.</p>
+        </div>
+      </section>
+      <section class="route-page route-page--wide" id="page-saved" data-route="saved">
+        <h2 class="jobs-section__title">Saved jobs</h2>
+        <div class="job-grid" id="saved-job-list"></div>
+        <div class="empty-state" id="saved-empty">
+          <h2 class="empty-state__title">Saved</h2>
+          <p class="empty-state__text">Jobs you save will appear here. Nothing saved yet.</p>
+        </div>
+      </section>
+      <section class="route-page" id="page-digest" data-route="digest">
+        <div class="digest-no-prefs" id="digest-no-prefs" style="display: none;">
+          <h2 class="empty-state__title">Digest</h2>
+          <p class="empty-state__text">Set preferences to generate a personalized digest. <a href="#/settings">Go to
+              Settings</a></p>
+        </div>
+        <div id="digest-content" style="display: none;">
+          <div class="digest-generate-row">
+            <button type="button" class="btn btn--primary" id="digest-generate-btn">Generate Today's 9AM Digest
+              (Simulated)</button>
           </div>
-        </section>
-        <section class="route-page" id="page-settings" data-route="settings">
-          <h1 class="route-page__title">Settings</h1>
-          <div class="card">
-            <h2 class="card__title">Preferences</h2>
-            <div class="field">
-              <label class="field__label" for="pref-roleKeywords">Role keywords</label>
-              <input id="pref-roleKeywords" class="field__input" type="text" placeholder="e.g. Frontend, React, SDE Intern" />
-              <span class="field__hint">Comma-separated. Used to match job titles and descriptions.</span>
-            </div>
-            <div class="field">
-              <label class="field__label" for="pref-preferredLocations">Preferred locations</label>
-              <select id="pref-preferredLocations" class="field__select field__select--multi" multiple>
-                <!-- options filled by JS from JOBS -->
-              </select>
-              <span class="field__hint">Hold Ctrl/Cmd to select multiple.</span>
-            </div>
-            <div class="field">
-              <label class="field__label">Preferred mode</label>
-              <div class="checkbox-group">
-                <label><input type="checkbox" name="pref-mode" value="Remote" /> Remote</label>
-                <label><input type="checkbox" name="pref-mode" value="Hybrid" /> Hybrid</label>
-                <label><input type="checkbox" name="pref-mode" value="Onsite" /> Onsite</label>
+          <div class="empty-state digest-no-matches" id="digest-no-matches" style="display: none;">
+            <h2 class="empty-state__title">No matching roles today</h2>
+            <p class="empty-state__text">Check again tomorrow.</p>
+          </div>
+          <div id="digest-card-wrap" style="display: none;">
+            <div class="digest-card">
+              <div class="digest-card__header">
+                <h2 class="digest-card__title">Top 10 Jobs For You — 9AM Digest</h2>
+                <p class="digest-card__subtext" id="digest-date-subtext"></p>
+              </div>
+              <div class="digest-card__jobs" id="digest-job-list"></div>
+              <div class="digest-card__footer">
+                This digest was generated based on your preferences.
               </div>
             </div>
-            <div class="field">
-              <label class="field__label" for="pref-experienceLevel">Experience level</label>
-              <select id="pref-experienceLevel" class="field__select">
-                <option value="">Any</option>
-                <option value="Fresher">Fresher</option>
-                <option value="0-1">0-1</option>
-                <option value="1-3">1-3</option>
-                <option value="3-5">3-5</option>
-              </select>
+            <div class="digest-actions">
+              <button type="button" class="btn btn--secondary" id="digest-copy-btn">Copy Digest to Clipboard</button>
+              <button type="button" class="btn btn--primary" id="digest-email-btn">Create Email Draft</button>
             </div>
-            <div class="field">
-              <label class="field__label" for="pref-skills">Skills</label>
-              <input id="pref-skills" class="field__input" type="text" placeholder="e.g. React, Java, Python" />
-              <span class="field__hint">Comma-separated. Matched against job skills.</span>
-            </div>
-            <div class="field">
-              <label class="field__label" for="pref-minMatchScore">Minimum match score (0–100)</label>
-              <div class="slider-row">
-                <input id="pref-minMatchScore" type="range" min="0" max="100" value="40" />
-                <span class="slider-value" id="pref-minMatchScore-value">40</span>
-              </div>
-            </div>
-            <button type="button" class="btn btn--primary" id="btn-save-prefs">Save preferences</button>
+            <p class="digest-note">Demo Mode: Daily 9AM trigger simulated manually.</p>
           </div>
-        </section>
-        <section class="route-page" id="page-proof" data-route="proof">
-          <div class="proof-placeholder">
-            <h2 class="proof-placeholder__title">Proof</h2>
-            <p class="proof-placeholder__text">Placeholder for artifact collection. This section will be built in a later step.</p>
+        </div>
+      </section>
+      <section class="route-page" id="page-settings" data-route="settings">
+        <h1 class="route-page__title">Settings</h1>
+        <div class="card">
+          <h2 class="card__title">Preferences</h2>
+          <div class="field">
+            <label class="field__label" for="pref-roleKeywords">Role keywords</label>
+            <input id="pref-roleKeywords" class="field__input" type="text"
+              placeholder="e.g. Frontend, React, SDE Intern" />
+            <span class="field__hint">Comma-separated. Used to match job titles and descriptions.</span>
           </div>
-        </section>
-      </main>
+          <div class="field">
+            <label class="field__label" for="pref-preferredLocations">Preferred locations</label>
+            <select id="pref-preferredLocations" class="field__select field__select--multi" multiple>
+              <!-- options filled by JS from JOBS -->
+            </select>
+            <span class="field__hint">Hold Ctrl/Cmd to select multiple.</span>
+          </div>
+          <div class="field">
+            <label class="field__label">Preferred mode</label>
+            <div class="checkbox-group">
+              <label><input type="checkbox" name="pref-mode" value="Remote" /> Remote</label>
+              <label><input type="checkbox" name="pref-mode" value="Hybrid" /> Hybrid</label>
+              <label><input type="checkbox" name="pref-mode" value="Onsite" /> Onsite</label>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field__label" for="pref-experienceLevel">Experience level</label>
+            <select id="pref-experienceLevel" class="field__select">
+              <option value="">Any</option>
+              <option value="Fresher">Fresher</option>
+              <option value="0-1">0-1</option>
+              <option value="1-3">1-3</option>
+              <option value="3-5">3-5</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field__label" for="pref-skills">Skills</label>
+            <input id="pref-skills" class="field__input" type="text" placeholder="e.g. React, Java, Python" />
+            <span class="field__hint">Comma-separated. Matched against job skills.</span>
+          </div>
+          <div class="field">
+            <label class="field__label" for="pref-minMatchScore">Minimum match score (0–100)</label>
+            <div class="slider-row">
+              <input id="pref-minMatchScore" type="range" min="0" max="100" value="40" />
+              <span class="slider-value" id="pref-minMatchScore-value">40</span>
+            </div>
+          </div>
+          <button type="button" class="btn btn--primary" id="btn-save-prefs">Save preferences</button>
+        </div>
+      </section>
+      <section class="route-page" id="page-proof" data-route="proof">
+        <div class="proof-placeholder">
+          <h2 class="proof-placeholder__title">Proof</h2>
+          <p class="proof-placeholder__text">Placeholder for artifact collection. This section will be built in a later
+            step.</p>
+        </div>
+      </section>
+    </main>
 
-      <div class="modal-backdrop" id="job-modal" aria-hidden="true">
-        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-          <div class="modal__header">
-            <h3 class="modal__title" id="modal-title"></h3>
-            <p class="modal__company" id="modal-company"></p>
+    <div class="modal-backdrop" id="job-modal" aria-hidden="true">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal__header">
+          <h3 class="modal__title" id="modal-title"></h3>
+          <p class="modal__company" id="modal-company"></p>
+        </div>
+        <div class="modal__body">
+          <div id="modal-description"></div>
+          <div class="modal__skills">
+            <p class="modal__skills-title">Skills</p>
+            <div class="modal__skills-list" id="modal-skills"></div>
           </div>
-          <div class="modal__body">
-            <div id="modal-description"></div>
-            <div class="modal__skills">
-              <p class="modal__skills-title">Skills</p>
-              <div class="modal__skills-list" id="modal-skills"></div>
-            </div>
-          </div>
-          <div class="modal__footer">
-            <button type="button" class="btn btn--primary" id="modal-apply">Apply</button>
-            <button type="button" class="btn btn--secondary" id="modal-save">Save</button>
-            <button type="button" class="btn btn--secondary" id="modal-close">Close</button>
-          </div>
+        </div>
+        <div class="modal__footer">
+          <button type="button" class="btn btn--primary" id="modal-apply">Apply</button>
+          <button type="button" class="btn btn--secondary" id="modal-save">Save</button>
+          <button type="button" class="btn btn--secondary" id="modal-close">Close</button>
         </div>
       </div>
     </div>
+  </div>
 
-    <script>
-      (function () {
-        var DEFAULT_ROUTE = "landing";
-        var SAVED_KEY = "job-tracker-saved";
-        var PREF_KEY = "jobTrackerPreferences";
+  <script>
+    (function () {
+      var DEFAULT_ROUTE = "landing";
+      var SAVED_KEY = "job-tracker-saved";
+      var PREF_KEY = "jobTrackerPreferences";
 
-        var JOBS = [
-          { id: "j1", title: "SDE Intern", company: "Amazon", location: "Bangalore", mode: "Hybrid", experience: "Fresher", skills: ["Java", "Data Structures", "Algorithms"], source: "LinkedIn", postedDaysAgo: 1, salaryRange: "₹30k–₹50k/month Internship", applyUrl: "https://www.linkedin.com/jobs/view/1", description: "Work on real customer-facing projects with mentorship from senior engineers. You will design, implement and test features for our retail or AWS teams." },
-          { id: "j2", title: "Graduate Engineer Trainee", company: "TCS", location: "Hyderabad", mode: "Onsite", experience: "Fresher", skills: ["Java", "SQL", "Spring"], source: "Naukri", postedDaysAgo: 3, salaryRange: "3–5 LPA", applyUrl: "https://www.naukri.com/job/1", description: "GET program for 2024/2025 passouts. Training on enterprise Java, cloud basics, and agile. Post training you will be assigned to projects." },
-          { id: "j3", title: "Junior Backend Developer", company: "Razorpay", location: "Bangalore", mode: "Hybrid", experience: "0-1", skills: ["Node.js", "PostgreSQL", "Redis"], source: "LinkedIn", postedDaysAgo: 0, salaryRange: "6–10 LPA", applyUrl: "https://www.linkedin.com/jobs/view/2", description: "Build and maintain APIs for payments and settlements. You will work with product and design to ship features that scale to millions of transactions." },
-          { id: "j4", title: "Frontend Intern", company: "Freshworks", location: "Chennai", mode: "Remote", experience: "Fresher", skills: ["React", "JavaScript", "CSS"], source: "Indeed", postedDaysAgo: 2, salaryRange: "₹15k–₹40k/month Internship", applyUrl: "https://www.indeed.com/viewjob?jk=1", description: "Help build UI components and pages for our product suite. You will use React and our design system under the guidance of senior frontend engineers." },
-          { id: "j5", title: "QA Intern", company: "Wipro", location: "Pune", mode: "Onsite", experience: "Fresher", skills: ["Manual Testing", "Selenium", "JIRA"], source: "Naukri", postedDaysAgo: 5, salaryRange: "₹20k–₹35k/month Internship", applyUrl: "https://www.naukri.com/job/2", description: "Create test cases, execute regression and report bugs. Exposure to automation tools and agile ceremonies. Suitable for final-year students." },
-          { id: "j6", title: "Data Analyst Intern", company: "Flipkart", location: "Bangalore", mode: "Hybrid", experience: "Fresher", skills: ["SQL", "Python", "Excel"], source: "LinkedIn", postedDaysAgo: 1, salaryRange: "₹25k–₹45k/month Internship", applyUrl: "https://www.linkedin.com/jobs/view/3", description: "Analyze user and business metrics. Build dashboards and ad-hoc reports. Work with product and category teams to drive decisions." },
-          { id: "j7", title: "Java Developer (0-1)", company: "Infosys", location: "Mumbai", mode: "Onsite", experience: "0-1", skills: ["Java", "Spring Boot", "REST APIs"], source: "Naukri", postedDaysAgo: 4, salaryRange: "3–5 LPA", applyUrl: "https://www.naukri.com/job/3", description: "Develop and maintain Java applications for our clients. You will work in agile squads and get trained on our delivery framework." },
-          { id: "j8", title: "Python Developer (Fresher)", company: "Zoho", location: "Chennai", mode: "Onsite", experience: "Fresher", skills: ["Python", "Django", "MySQL"], source: "LinkedIn", postedDaysAgo: 2, salaryRange: "4–6 LPA", applyUrl: "https://www.linkedin.com/jobs/view/4", description: "Build backend services and internal tools using Python. Zoho offers a strong engineering culture and long-term growth." },
-          { id: "j9", title: "React Developer (1-3)", company: "PhonePe", location: "Bangalore", mode: "Hybrid", experience: "1-3", skills: ["React", "TypeScript", "Redux"], source: "Indeed", postedDaysAgo: 0, salaryRange: "10–18 LPA", applyUrl: "https://www.indeed.com/viewjob?jk=2", description: "Own features on our consumer or merchant apps. You will work with design and backend to deliver fast, accessible UIs at scale." },
-          { id: "j10", title: "SDE Intern", company: "Swiggy", location: "Bangalore", mode: "Hybrid", experience: "Fresher", skills: ["Java", "Kafka", "Microservices"], source: "LinkedIn", postedDaysAgo: 3, salaryRange: "₹35k–₹55k/month Internship", applyUrl: "https://www.linkedin.com/jobs/view/5", description: "Contribute to order management or delivery systems. You will write code that runs in production and impacts millions of orders." },
-          { id: "j11", title: "Graduate Engineer Trainee", company: "Accenture", location: "Gurgaon", mode: "Onsite", experience: "Fresher", skills: [".NET", "SQL", "Azure"], source: "Naukri", postedDaysAgo: 6, salaryRange: "3–5 LPA", applyUrl: "https://www.naukri.com/job/4", description: "Join our technology practice. Training in cloud and full-stack development. Placements across banking, retail and healthcare projects." },
-          { id: "j12", title: "Backend Developer (0-1)", company: "Juspay", location: "Bangalore", mode: "Remote", experience: "0-1", skills: ["Go", "PostgreSQL", "Redis"], source: "LinkedIn", postedDaysAgo: 1, salaryRange: "6–12 LPA", applyUrl: "https://www.linkedin.com/jobs/view/6", description: "Build payment gateway and reconciliation systems. High ownership and exposure to distributed systems and fintech." },
-          { id: "j13", title: "Frontend Intern", company: "CRED", location: "Bangalore", mode: "Remote", experience: "Fresher", skills: ["React", "JavaScript", "GraphQL"], source: "Indeed", postedDaysAgo: 4, salaryRange: "₹30k–₹50k/month Internship", applyUrl: "https://www.indeed.com/viewjob?jk=3", description: "Work on the CRED app or internal dashboards. You will implement UI from Figma and integrate with APIs." },
-          { id: "j14", title: "Java Developer (1-3)", company: "Capgemini", location: "Pune", mode: "Hybrid", experience: "1-3", skills: ["Java", "Spring", "Kafka"], source: "Naukri", postedDaysAgo: 7, salaryRange: "6–10 LPA", applyUrl: "https://www.naukri.com/job/5", description: "Develop enterprise Java applications for global clients. Opportunity to work on digital transformation projects." },
-          { id: "j15", title: "Data Analyst Intern", company: "IBM", location: "Bangalore", mode: "Hybrid", experience: "Fresher", skills: ["Python", "SQL", "Tableau"], source: "LinkedIn", postedDaysAgo: 2, salaryRange: "₹20k–₹40k/month Internship", applyUrl: "https://www.linkedin.com/jobs/view/7", description: "Support analytics and reporting for IBM products. Use Python and visualization tools to derive insights from data." },
-          { id: "j16", title: "SDE Intern", company: "Paytm", location: "Noida", mode: "Onsite", experience: "Fresher", skills: ["Java", "Android", "REST"], source: "Naukri", postedDaysAgo: 5, salaryRange: "₹25k–₹45k/month Internship", applyUrl: "https://www.naukri.com/job/6", description: "Work on Paytm app or merchant backend. You will build features used by millions of users and merchants." },
-          { id: "j17", title: "React Developer (0-1)", company: "Unacademy", location: "Bangalore", mode: "Remote", experience: "0-1", skills: ["React", "JavaScript", "CSS"], source: "Indeed", postedDaysAgo: 1, salaryRange: "5–8 LPA", applyUrl: "https://www.indeed.com/viewjob?jk=4", description: "Build learning platform UI. Collaborate with product to create responsive and accessible experiences for students and educators." },
-          { id: "j18", title: "Graduate Engineer Trainee", company: "Cognizant", location: "Chennai", mode: "Onsite", experience: "Fresher", skills: ["Java", "SQL", "Angular"], source: "LinkedIn", postedDaysAgo: 8, salaryRange: "3–5 LPA", applyUrl: "https://www.linkedin.com/jobs/view/8", description: "Cognizant Career Academy program. Structured training followed by project assignment in digital, cloud or data." },
-          { id: "j19", title: "Python Developer (1-3)", company: "Dell", location: "Bangalore", mode: "Hybrid", experience: "1-3", skills: ["Python", "Django", "AWS"], source: "Naukri", postedDaysAgo: 3, salaryRange: "10–18 LPA", applyUrl: "https://www.naukri.com/job/7", description: "Develop internal tools and automation for Dell IT. Work with global teams on cloud and data pipelines." },
-          { id: "j20", title: "QA Intern", company: "Oracle", location: "Bangalore", mode: "Hybrid", experience: "Fresher", skills: ["Test Automation", "Java", "Selenium"], source: "Indeed", postedDaysAgo: 4, salaryRange: "₹22k–₹42k/month Internship", applyUrl: "https://www.indeed.com/viewjob?jk=5", description: "Create automated tests for Oracle Cloud applications. Learn enterprise QA practices and CI/CD." },
-          { id: "j21", title: "Junior Backend Developer", company: "ShareChat", location: "Bangalore", mode: "Remote", experience: "0-1", skills: ["Go", "MySQL", "Redis"], source: "LinkedIn", postedDaysAgo: 0, salaryRange: "8–14 LPA", applyUrl: "https://www.linkedin.com/jobs/view/9", description: "Build scalable APIs for our social and short-video products. High traffic and real-time systems." },
-          { id: "j22", title: "Frontend Intern", company: "Zeta", location: "Bangalore", mode: "Hybrid", experience: "Fresher", skills: ["React", "TypeScript", "Redux"], source: "Naukri", postedDaysAgo: 6, salaryRange: "₹28k–₹48k/month Internship", applyUrl: "https://www.naukri.com/job/8", description: "Work on banking and card management UIs. Fintech product experience with modern React stack." },
-          { id: "j23", title: "Java Developer (0-1)", company: "SAP", location: "Bangalore", mode: "Onsite", experience: "0-1", skills: ["Java", "Spring", "SAP Cloud"], source: "LinkedIn", postedDaysAgo: 2, salaryRange: "6–10 LPA", applyUrl: "https://www.linkedin.com/jobs/view/10", description: "Contribute to SAP cloud products. Training on SAP technologies and agile development." },
-          { id: "j24", title: "SDE Intern", company: "Microsoft", location: "Hyderabad", mode: "Hybrid", experience: "Fresher", skills: ["C#", "Azure", "Algorithms"], source: "Indeed", postedDaysAgo: 1, salaryRange: "₹40k–₹60k/month Internship", applyUrl: "https://www.indeed.com/viewjob?jk=6", description: "Internship in IDC Hyderabad. Work on Azure or Office products. Mentorship and possibility of pre-placement offer." },
-          { id: "j25", title: "React Developer (1-3)", company: "Myntra", location: "Bangalore", mode: "Onsite", experience: "1-3", skills: ["React", "Node.js", "GraphQL"], source: "Naukri", postedDaysAgo: 5, salaryRange: "10–18 LPA", applyUrl: "https://www.naukri.com/job/9", description: "Build customer-facing and internal apps for fashion e-commerce. Own features from design to deployment." },
-          { id: "j26", title: "Data Analyst Intern", company: "Ola", location: "Bangalore", mode: "Hybrid", experience: "Fresher", skills: ["Python", "SQL", "Excel"], source: "LinkedIn", postedDaysAgo: 3, salaryRange: "₹25k–₹45k/month Internship", applyUrl: "https://www.linkedin.com/jobs/view/11", description: "Analyze mobility and electric vehicle data. Create reports and dashboards for operations and product." },
-          { id: "j27", title: "Graduate Engineer Trainee", company: "L&T Infotech", location: "Mumbai", mode: "Onsite", experience: "Fresher", skills: ["Java", "Oracle", "Web Services"], source: "Naukri", postedDaysAgo: 9, salaryRange: "3–5 LPA", applyUrl: "https://www.naukri.com/job/10", description: "GET program with training in Java and enterprise stack. Deployed to client projects post training." },
-          { id: "j28", title: "Backend Developer (0-1)", company: "Postman", location: "Bangalore", mode: "Remote", experience: "0-1", skills: ["Node.js", "PostgreSQL", "Go"], source: "Indeed", postedDaysAgo: 0, salaryRange: "8–14 LPA", applyUrl: "https://www.indeed.com/viewjob?jk=7", description: "Build APIs and services for the Postman platform. Work on developer tools used globally." },
-          { id: "j29", title: "QA Intern", company: "Thoughtworks", location: "Bangalore", mode: "Hybrid", experience: "Fresher", skills: ["Testing", "Automation", "Agile"], source: "LinkedIn", postedDaysAgo: 4, salaryRange: "₹30k–₹50k/month Internship", applyUrl: "https://www.linkedin.com/jobs/view/12", description: "Learn test-driven development and continuous delivery. Work in agile teams on client projects." },
-          { id: "j30", title: "Python Developer (Fresher)", company: "HackerRank", location: "Remote", mode: "Remote", experience: "Fresher", skills: ["Python", "Django", "React"], source: "Naukri", postedDaysAgo: 2, salaryRange: "5–8 LPA", applyUrl: "https://www.naukri.com/job/11", description: "Build features for the assessment platform. Full-stack exposure with Python backend and React frontend." },
-          { id: "j31", title: "Java Developer (1-3)", company: "HCL Tech", location: "Noida", mode: "Hybrid", experience: "1-3", skills: ["Java", "Microservices", "Kubernetes"], source: "Indeed", postedDaysAgo: 6, salaryRange: "6–12 LPA", applyUrl: "https://www.indeed.com/viewjob?jk=8", description: "Develop microservices for enterprise clients. Exposure to cloud and DevOps practices." },
-          { id: "j32", title: "SDE Intern", company: "Intuit", location: "Bangalore", mode: "Hybrid", experience: "Fresher", skills: ["Java", "React", "AWS"], source: "LinkedIn", postedDaysAgo: 1, salaryRange: "₹35k–₹55k/month Internship", applyUrl: "https://www.linkedin.com/jobs/view/13", description: "Work on QuickBooks or TurboTax. Build features that help small businesses and consumers." },
-          { id: "j33", title: "Frontend Intern", company: "CleverTap", location: "Mumbai", mode: "Remote", experience: "Fresher", skills: ["React", "JavaScript", "HTML/CSS"], source: "Naukri", postedDaysAgo: 7, salaryRange: "₹20k–₹38k/month Internship", applyUrl: "https://www.naukri.com/job/12", description: "Build UI for analytics and engagement platform. Work with product on dashboards and components." },
-          { id: "j34", title: "Junior Backend Developer", company: "BrowserStack", location: "Mumbai", mode: "Remote", experience: "0-1", skills: ["Ruby", "Rails", "PostgreSQL"], source: "Indeed", postedDaysAgo: 3, salaryRange: "7–12 LPA", applyUrl: "https://www.indeed.com/viewjob?jk=9", description: "Develop and maintain backend services for our testing platform. Global product with high scale." },
-          { id: "j35", title: "React Developer (0-1)", company: "Dunzo", location: "Bangalore", mode: "Hybrid", experience: "0-1", skills: ["React", "TypeScript", "Redux"], source: "LinkedIn", postedDaysAgo: 5, salaryRange: "6–10 LPA", applyUrl: "https://www.linkedin.com/jobs/view/14", description: "Build customer and partner app experiences. Fast-paced hyperlocal delivery product." },
-          { id: "j36", title: "Graduate Engineer Trainee", company: "Tech Mahindra", location: "Pune", mode: "Onsite", experience: "Fresher", skills: ["Java", "Python", "SQL"], source: "Naukri", postedDaysAgo: 10, salaryRange: "3–5 LPA", applyUrl: "https://www.naukri.com/job/13", description: "GET program with training in emerging tech. Deployed to telecom, BFSI or healthcare projects." },
-          { id: "j37", title: "Data Analyst Intern", company: "Mu Sigma", location: "Bangalore", mode: "Onsite", experience: "Fresher", skills: ["R", "SQL", "Statistics"], source: "LinkedIn", postedDaysAgo: 4, salaryRange: "₹22k–₹40k/month Internship", applyUrl: "https://www.linkedin.com/jobs/view/15", description: "Support analytics and decision science projects. Work with large datasets and visualization." },
-          { id: "j38", title: "Python Developer (1-3)", company: "Practo", location: "Bangalore", mode: "Hybrid", experience: "1-3", skills: ["Python", "Django", "Celery"], source: "Indeed", postedDaysAgo: 2, salaryRange: "8–15 LPA", applyUrl: "https://www.indeed.com/viewjob?jk=10", description: "Build healthcare platform backend. APIs for appointments, prescriptions and teleconsultation." },
-          { id: "j39", title: "QA Intern", company: "MakeMyTrip", location: "Gurgaon", mode: "Onsite", experience: "Fresher", skills: ["Selenium", "Java", "API Testing"], source: "Naukri", postedDaysAgo: 6, salaryRange: "₹25k–₹42k/month Internship", applyUrl: "https://www.naukri.com/job/14", description: "Test web and mobile apps for travel products. Learn test automation and release processes." },
-          { id: "j40", title: "Java Developer (0-1)", company: "CitiusTech", location: "Mumbai", mode: "Hybrid", experience: "0-1", skills: ["Java", "Spring", "Healthcare"], source: "LinkedIn", postedDaysAgo: 1, salaryRange: "4–7 LPA", applyUrl: "https://www.linkedin.com/jobs/view/16", description: "Develop healthcare technology solutions. Work on integration and data pipelines for clients." },
-          { id: "j41", title: "SDE Intern", company: "Deutsche Bank", location: "Pune", mode: "Hybrid", experience: "Fresher", skills: ["Java", "Python", "SQL"], source: "Indeed", postedDaysAgo: 0, salaryRange: "₹40k–₹60k/month Internship", applyUrl: "https://www.indeed.com/viewjob?jk=11", description: "Technology internship in global markets or corporate bank. Exposure to financial systems and data." },
-          { id: "j42", title: "Frontend Intern", company: "InMobi", location: "Bangalore", mode: "Remote", experience: "Fresher", skills: ["React", "JavaScript", "Ad Tech"], source: "Naukri", postedDaysAgo: 8, salaryRange: "₹28k–₹48k/month Internship", applyUrl: "https://www.naukri.com/job/15", description: "Build UI for ad tech platform. Work on dashboards and reporting for advertisers and publishers." },
-          { id: "j43", title: "React Developer (1-3)", company: "Livspace", location: "Bangalore", mode: "Onsite", experience: "1-3", skills: ["React", "Next.js", "TypeScript"], source: "LinkedIn", postedDaysAgo: 3, salaryRange: "10–16 LPA", applyUrl: "https://www.linkedin.com/jobs/view/17", description: "Build customer and interior designer experiences. E-commerce and design tech product." },
-          { id: "j44", title: "Junior Backend Developer", company: "Groww", location: "Bangalore", mode: "Remote", experience: "0-1", skills: ["Java", "Spring Boot", "Kafka"], source: "Indeed", postedDaysAgo: 2, salaryRange: "8–14 LPA", applyUrl: "https://www.indeed.com/viewjob?jk=12", description: "Build backend for investment and trading platform. High reliability and compliance requirements." },
-          { id: "j45", title: "Graduate Engineer Trainee", company: "Mindtree", location: "Bangalore", mode: "Onsite", experience: "Fresher", skills: ["Java", "Cloud", "DevOps"], source: "Naukri", postedDaysAgo: 5, salaryRange: "3–5 LPA", applyUrl: "https://www.naukri.com/job/16", description: "GET program with digital and cloud focus. Training followed by project deployment." },
-          { id: "j46", title: "Python Developer (Fresher)", company: "Quantiphi", location: "Mumbai", mode: "Hybrid", experience: "Fresher", skills: ["Python", "ML", "Data"], source: "LinkedIn", postedDaysAgo: 4, salaryRange: "4–6 LPA", applyUrl: "https://www.linkedin.com/jobs/view/18", description: "Work on ML and data engineering projects. Python-based solutions for enterprise clients." },
-          { id: "j47", title: "Data Analyst Intern", company: "Cure.fit", location: "Bangalore", mode: "Hybrid", experience: "Fresher", skills: ["SQL", "Python", "Tableau"], source: "Indeed", postedDaysAgo: 1, salaryRange: "₹22k–₹40k/month Internship", applyUrl: "https://www.indeed.com/viewjob?jk=13", description: "Analyze user and fitness data. Support growth and product teams with reports and insights." },
-          { id: "j48", title: "Java Developer (1-3)", company: "EPAM", location: "Hyderabad", mode: "Remote", experience: "1-3", skills: ["Java", "AWS", "Microservices"], source: "Naukri", postedDaysAgo: 7, salaryRange: "8–14 LPA", applyUrl: "https://www.naukri.com/job/17", description: "Develop solutions for global clients. Work on cloud-native and modern Java stack." },
-          { id: "j49", title: "QA Intern", company: "MediaTek", location: "Bangalore", mode: "Onsite", experience: "Fresher", skills: ["Python", "Automation", "Embedded"], source: "LinkedIn", postedDaysAgo: 9, salaryRange: "₹30k–₹50k/month Internship", applyUrl: "https://www.linkedin.com/jobs/view/19", description: "Test software for semiconductor and connectivity products. Scripting and test framework development." },
-          { id: "j50", title: "SDE Intern", company: "Goldman Sachs", location: "Bangalore", mode: "Hybrid", experience: "Fresher", skills: ["Java", "Python", "Algorithms"], source: "Indeed", postedDaysAgo: 0, salaryRange: "₹50k–₹70k/month Internship", applyUrl: "https://www.indeed.com/viewjob?jk=14", description: "Summer internship in engineering. Work on platforms for trading, risk or operations." },
-          { id: "j51", title: "React Developer (0-1)", company: "Licious", location: "Bangalore", mode: "Hybrid", experience: "0-1", skills: ["React", "Redux", "PWA"], source: "Naukri", postedDaysAgo: 3, salaryRange: "5–9 LPA", applyUrl: "https://www.naukri.com/job/18", description: "Build D2C meat delivery app and internal tools. Consumer product with strong design focus." },
-          { id: "j52", title: "Backend Developer (0-1)", company: "Slice", location: "Bangalore", mode: "Remote", experience: "0-1", skills: ["Go", "PostgreSQL", "Kafka"], source: "LinkedIn", postedDaysAgo: 2, salaryRange: "7–12 LPA", applyUrl: "https://www.linkedin.com/jobs/view/20", description: "Build fintech backend for card and payments. High growth startup with strong engineering culture." },
-          { id: "j53", title: "Frontend Intern", company: "Vedantu", location: "Bangalore", mode: "Remote", experience: "Fresher", skills: ["React", "JavaScript", "WebRTC"], source: "Indeed", postedDaysAgo: 5, salaryRange: "₹20k–₹38k/month Internship", applyUrl: "https://www.indeed.com/viewjob?jk=15", description: "Work on live class and learning platform UI. Real-time and video experience." },
-          { id: "j54", title: "Java Developer (0-1)", company: "Publicis Sapient", location: "Gurgaon", mode: "Hybrid", experience: "0-1", skills: ["Java", "Spring", "Cloud"], source: "Naukri", postedDaysAgo: 6, salaryRange: "5–8 LPA", applyUrl: "https://www.naukri.com/job/19", description: "Develop digital transformation solutions. Work with global brands on cloud and modern Java." },
-          { id: "j55", title: "Python Developer (1-3)", company: "Wingify", location: "Delhi", mode: "Remote", experience: "1-3", skills: ["Python", "Django", "React"], source: "LinkedIn", postedDaysAgo: 1, salaryRange: "10–18 LPA", applyUrl: "https://www.linkedin.com/jobs/view/21", description: "Build A/B testing and personalization platform. Full-stack role with product ownership." },
-          { id: "j56", title: "Graduate Engineer Trainee", company: "Persistent", location: "Pune", mode: "Onsite", experience: "Fresher", skills: ["Java", "Angular", "AWS"], source: "Indeed", postedDaysAgo: 8, salaryRange: "3–5 LPA", applyUrl: "https://www.indeed.com/viewjob?jk=16", description: "GET program in software product engineering. Training and project assignment in product teams." },
-          { id: "j57", title: "Data Analyst Intern", company: "Dream11", location: "Mumbai", mode: "Hybrid", experience: "Fresher", skills: ["Python", "SQL", "Pandas"], source: "Naukri", postedDaysAgo: 4, salaryRange: "₹28k–₹48k/month Internship", applyUrl: "https://www.naukri.com/job/20", description: "Analyze user and fantasy sports data. Support product and growth with metrics and experiments." },
-          { id: "j58", title: "QA Intern", company: "InfoEdge", location: "Noida", mode: "Onsite", experience: "Fresher", skills: ["Selenium", "API Testing", "JMeter"], source: "LinkedIn", postedDaysAgo: 10, salaryRange: "₹22k–₹40k/month Internship", applyUrl: "https://www.linkedin.com/jobs/view/22", description: "Test Naukri, Jeevansathi or other products. Performance and functional testing exposure." },
-          { id: "j59", title: "React Developer (1-3)", company: "Meesho", location: "Bangalore", mode: "Hybrid", experience: "1-3", skills: ["React", "React Native", "GraphQL"], source: "Indeed", postedDaysAgo: 0, salaryRange: "12–20 LPA", applyUrl: "https://www.indeed.com/viewjob?jk=17", description: "Build seller and reseller app experiences. Social commerce at scale with React and React Native." },
-          { id: "j60", title: "Junior Backend Developer", company: "Rebel Foods", location: "Mumbai", mode: "Remote", experience: "0-1", skills: ["Node.js", "MongoDB", "AWS"], source: "Naukri", postedDaysAgo: 2, salaryRange: "6–10 LPA", applyUrl: "https://www.naukri.com/job/21", description: "Build backend for cloud kitchens and delivery. Order and inventory systems for multi-brand ops." }
-        ];
+      var JOBS = [
+        { id: "j1", title: "SDE Intern", company: "Amazon", location: "Bangalore", mode: "Hybrid", experience: "Fresher", skills: ["Java", "Data Structures", "Algorithms"], source: "LinkedIn", postedDaysAgo: 1, salaryRange: "₹30k–₹50k/month Internship", applyUrl: "https://www.linkedin.com/jobs/view/1", description: "Work on real customer-facing projects with mentorship from senior engineers. You will design, implement and test features for our retail or AWS teams." },
+        { id: "j2", title: "Graduate Engineer Trainee", company: "TCS", location: "Hyderabad", mode: "Onsite", experience: "Fresher", skills: ["Java", "SQL", "Spring"], source: "Naukri", postedDaysAgo: 3, salaryRange: "3–5 LPA", applyUrl: "https://www.naukri.com/job/1", description: "GET program for 2024/2025 passouts. Training on enterprise Java, cloud basics, and agile. Post training you will be assigned to projects." },
+        { id: "j3", title: "Junior Backend Developer", company: "Razorpay", location: "Bangalore", mode: "Hybrid", experience: "0-1", skills: ["Node.js", "PostgreSQL", "Redis"], source: "LinkedIn", postedDaysAgo: 0, salaryRange: "6–10 LPA", applyUrl: "https://www.linkedin.com/jobs/view/2", description: "Build and maintain APIs for payments and settlements. You will work with product and design to ship features that scale to millions of transactions." },
+        { id: "j4", title: "Frontend Intern", company: "Freshworks", location: "Chennai", mode: "Remote", experience: "Fresher", skills: ["React", "JavaScript", "CSS"], source: "Indeed", postedDaysAgo: 2, salaryRange: "₹15k–₹40k/month Internship", applyUrl: "https://www.indeed.com/viewjob?jk=1", description: "Help build UI components and pages for our product suite. You will use React and our design system under the guidance of senior frontend engineers." },
+        { id: "j5", title: "QA Intern", company: "Wipro", location: "Pune", mode: "Onsite", experience: "Fresher", skills: ["Manual Testing", "Selenium", "JIRA"], source: "Naukri", postedDaysAgo: 5, salaryRange: "₹20k–₹35k/month Internship", applyUrl: "https://www.naukri.com/job/2", description: "Create test cases, execute regression and report bugs. Exposure to automation tools and agile ceremonies. Suitable for final-year students." },
+        { id: "j6", title: "Data Analyst Intern", company: "Flipkart", location: "Bangalore", mode: "Hybrid", experience: "Fresher", skills: ["SQL", "Python", "Excel"], source: "LinkedIn", postedDaysAgo: 1, salaryRange: "₹25k–₹45k/month Internship", applyUrl: "https://www.linkedin.com/jobs/view/3", description: "Analyze user and business metrics. Build dashboards and ad-hoc reports. Work with product and category teams to drive decisions." },
+        { id: "j7", title: "Java Developer (0-1)", company: "Infosys", location: "Mumbai", mode: "Onsite", experience: "0-1", skills: ["Java", "Spring Boot", "REST APIs"], source: "Naukri", postedDaysAgo: 4, salaryRange: "3–5 LPA", applyUrl: "https://www.naukri.com/job/3", description: "Develop and maintain Java applications for our clients. You will work in agile squads and get trained on our delivery framework." },
+        { id: "j8", title: "Python Developer (Fresher)", company: "Zoho", location: "Chennai", mode: "Onsite", experience: "Fresher", skills: ["Python", "Django", "MySQL"], source: "LinkedIn", postedDaysAgo: 2, salaryRange: "4–6 LPA", applyUrl: "https://www.linkedin.com/jobs/view/4", description: "Build backend services and internal tools using Python. Zoho offers a strong engineering culture and long-term growth." },
+        { id: "j9", title: "React Developer (1-3)", company: "PhonePe", location: "Bangalore", mode: "Hybrid", experience: "1-3", skills: ["React", "TypeScript", "Redux"], source: "Indeed", postedDaysAgo: 0, salaryRange: "10–18 LPA", applyUrl: "https://www.indeed.com/viewjob?jk=2", description: "Own features on our consumer or merchant apps. You will work with design and backend to deliver fast, accessible UIs at scale." },
+        { id: "j10", title: "SDE Intern", company: "Swiggy", location: "Bangalore", mode: "Hybrid", experience: "Fresher", skills: ["Java", "Kafka", "Microservices"], source: "LinkedIn", postedDaysAgo: 3, salaryRange: "₹35k–₹55k/month Internship", applyUrl: "https://www.linkedin.com/jobs/view/5", description: "Contribute to order management or delivery systems. You will write code that runs in production and impacts millions of orders." },
+        { id: "j11", title: "Graduate Engineer Trainee", company: "Accenture", location: "Gurgaon", mode: "Onsite", experience: "Fresher", skills: [".NET", "SQL", "Azure"], source: "Naukri", postedDaysAgo: 6, salaryRange: "3–5 LPA", applyUrl: "https://www.naukri.com/job/4", description: "Join our technology practice. Training in cloud and full-stack development. Placements across banking, retail and healthcare projects." },
+        { id: "j12", title: "Backend Developer (0-1)", company: "Juspay", location: "Bangalore", mode: "Remote", experience: "0-1", skills: ["Go", "PostgreSQL", "Redis"], source: "LinkedIn", postedDaysAgo: 1, salaryRange: "6–12 LPA", applyUrl: "https://www.linkedin.com/jobs/view/6", description: "Build payment gateway and reconciliation systems. High ownership and exposure to distributed systems and fintech." },
+        { id: "j13", title: "Frontend Intern", company: "CRED", location: "Bangalore", mode: "Remote", experience: "Fresher", skills: ["React", "JavaScript", "GraphQL"], source: "Indeed", postedDaysAgo: 4, salaryRange: "₹30k–₹50k/month Internship", applyUrl: "https://www.indeed.com/viewjob?jk=3", description: "Work on the CRED app or internal dashboards. You will implement UI from Figma and integrate with APIs." },
+        { id: "j14", title: "Java Developer (1-3)", company: "Capgemini", location: "Pune", mode: "Hybrid", experience: "1-3", skills: ["Java", "Spring", "Kafka"], source: "Naukri", postedDaysAgo: 7, salaryRange: "6–10 LPA", applyUrl: "https://www.naukri.com/job/5", description: "Develop enterprise Java applications for global clients. Opportunity to work on digital transformation projects." },
+        { id: "j15", title: "Data Analyst Intern", company: "IBM", location: "Bangalore", mode: "Hybrid", experience: "Fresher", skills: ["Python", "SQL", "Tableau"], source: "LinkedIn", postedDaysAgo: 2, salaryRange: "₹20k–₹40k/month Internship", applyUrl: "https://www.linkedin.com/jobs/view/7", description: "Support analytics and reporting for IBM products. Use Python and visualization tools to derive insights from data." },
+        { id: "j16", title: "SDE Intern", company: "Paytm", location: "Noida", mode: "Onsite", experience: "Fresher", skills: ["Java", "Android", "REST"], source: "Naukri", postedDaysAgo: 5, salaryRange: "₹25k–₹45k/month Internship", applyUrl: "https://www.naukri.com/job/6", description: "Work on Paytm app or merchant backend. You will build features used by millions of users and merchants." },
+        { id: "j17", title: "React Developer (0-1)", company: "Unacademy", location: "Bangalore", mode: "Remote", experience: "0-1", skills: ["React", "JavaScript", "CSS"], source: "Indeed", postedDaysAgo: 1, salaryRange: "5–8 LPA", applyUrl: "https://www.indeed.com/viewjob?jk=4", description: "Build learning platform UI. Collaborate with product to create responsive and accessible experiences for students and educators." },
+        { id: "j18", title: "Graduate Engineer Trainee", company: "Cognizant", location: "Chennai", mode: "Onsite", experience: "Fresher", skills: ["Java", "SQL", "Angular"], source: "LinkedIn", postedDaysAgo: 8, salaryRange: "3–5 LPA", applyUrl: "https://www.linkedin.com/jobs/view/8", description: "Cognizant Career Academy program. Structured training followed by project assignment in digital, cloud or data." },
+        { id: "j19", title: "Python Developer (1-3)", company: "Dell", location: "Bangalore", mode: "Hybrid", experience: "1-3", skills: ["Python", "Django", "AWS"], source: "Naukri", postedDaysAgo: 3, salaryRange: "10–18 LPA", applyUrl: "https://www.naukri.com/job/7", description: "Develop internal tools and automation for Dell IT. Work with global teams on cloud and data pipelines." },
+        { id: "j20", title: "QA Intern", company: "Oracle", location: "Bangalore", mode: "Hybrid", experience: "Fresher", skills: ["Test Automation", "Java", "Selenium"], source: "Indeed", postedDaysAgo: 4, salaryRange: "₹22k–₹42k/month Internship", applyUrl: "https://www.indeed.com/viewjob?jk=5", description: "Create automated tests for Oracle Cloud applications. Learn enterprise QA practices and CI/CD." },
+        { id: "j21", title: "Junior Backend Developer", company: "ShareChat", location: "Bangalore", mode: "Remote", experience: "0-1", skills: ["Go", "MySQL", "Redis"], source: "LinkedIn", postedDaysAgo: 0, salaryRange: "8–14 LPA", applyUrl: "https://www.linkedin.com/jobs/view/9", description: "Build scalable APIs for our social and short-video products. High traffic and real-time systems." },
+        { id: "j22", title: "Frontend Intern", company: "Zeta", location: "Bangalore", mode: "Hybrid", experience: "Fresher", skills: ["React", "TypeScript", "Redux"], source: "Naukri", postedDaysAgo: 6, salaryRange: "₹28k–₹48k/month Internship", applyUrl: "https://www.naukri.com/job/8", description: "Work on banking and card management UIs. Fintech product experience with modern React stack." },
+        { id: "j23", title: "Java Developer (0-1)", company: "SAP", location: "Bangalore", mode: "Onsite", experience: "0-1", skills: ["Java", "Spring", "SAP Cloud"], source: "LinkedIn", postedDaysAgo: 2, salaryRange: "6–10 LPA", applyUrl: "https://www.linkedin.com/jobs/view/10", description: "Contribute to SAP cloud products. Training on SAP technologies and agile development." },
+        { id: "j24", title: "SDE Intern", company: "Microsoft", location: "Hyderabad", mode: "Hybrid", experience: "Fresher", skills: ["C#", "Azure", "Algorithms"], source: "Indeed", postedDaysAgo: 1, salaryRange: "₹40k–₹60k/month Internship", applyUrl: "https://www.indeed.com/viewjob?jk=6", description: "Internship in IDC Hyderabad. Work on Azure or Office products. Mentorship and possibility of pre-placement offer." },
+        { id: "j25", title: "React Developer (1-3)", company: "Myntra", location: "Bangalore", mode: "Onsite", experience: "1-3", skills: ["React", "Node.js", "GraphQL"], source: "Naukri", postedDaysAgo: 5, salaryRange: "10–18 LPA", applyUrl: "https://www.naukri.com/job/9", description: "Build customer-facing and internal apps for fashion e-commerce. Own features from design to deployment." },
+        { id: "j26", title: "Data Analyst Intern", company: "Ola", location: "Bangalore", mode: "Hybrid", experience: "Fresher", skills: ["Python", "SQL", "Excel"], source: "LinkedIn", postedDaysAgo: 3, salaryRange: "₹25k–₹45k/month Internship", applyUrl: "https://www.linkedin.com/jobs/view/11", description: "Analyze mobility and electric vehicle data. Create reports and dashboards for operations and product." },
+        { id: "j27", title: "Graduate Engineer Trainee", company: "L&T Infotech", location: "Mumbai", mode: "Onsite", experience: "Fresher", skills: ["Java", "Oracle", "Web Services"], source: "Naukri", postedDaysAgo: 9, salaryRange: "3–5 LPA", applyUrl: "https://www.naukri.com/job/10", description: "GET program with training in Java and enterprise stack. Deployed to client projects post training." },
+        { id: "j28", title: "Backend Developer (0-1)", company: "Postman", location: "Bangalore", mode: "Remote", experience: "0-1", skills: ["Node.js", "PostgreSQL", "Go"], source: "Indeed", postedDaysAgo: 0, salaryRange: "8–14 LPA", applyUrl: "https://www.indeed.com/viewjob?jk=7", description: "Build APIs and services for the Postman platform. Work on developer tools used globally." },
+        { id: "j29", title: "QA Intern", company: "Thoughtworks", location: "Bangalore", mode: "Hybrid", experience: "Fresher", skills: ["Testing", "Automation", "Agile"], source: "LinkedIn", postedDaysAgo: 4, salaryRange: "₹30k–₹50k/month Internship", applyUrl: "https://www.linkedin.com/jobs/view/12", description: "Learn test-driven development and continuous delivery. Work in agile teams on client projects." },
+        { id: "j30", title: "Python Developer (Fresher)", company: "HackerRank", location: "Remote", mode: "Remote", experience: "Fresher", skills: ["Python", "Django", "React"], source: "Naukri", postedDaysAgo: 2, salaryRange: "5–8 LPA", applyUrl: "https://www.naukri.com/job/11", description: "Build features for the assessment platform. Full-stack exposure with Python backend and React frontend." },
+        { id: "j31", title: "Java Developer (1-3)", company: "HCL Tech", location: "Noida", mode: "Hybrid", experience: "1-3", skills: ["Java", "Microservices", "Kubernetes"], source: "Indeed", postedDaysAgo: 6, salaryRange: "6–12 LPA", applyUrl: "https://www.indeed.com/viewjob?jk=8", description: "Develop microservices for enterprise clients. Exposure to cloud and DevOps practices." },
+        { id: "j32", title: "SDE Intern", company: "Intuit", location: "Bangalore", mode: "Hybrid", experience: "Fresher", skills: ["Java", "React", "AWS"], source: "LinkedIn", postedDaysAgo: 1, salaryRange: "₹35k–₹55k/month Internship", applyUrl: "https://www.linkedin.com/jobs/view/13", description: "Work on QuickBooks or TurboTax. Build features that help small businesses and consumers." },
+        { id: "j33", title: "Frontend Intern", company: "CleverTap", location: "Mumbai", mode: "Remote", experience: "Fresher", skills: ["React", "JavaScript", "HTML/CSS"], source: "Naukri", postedDaysAgo: 7, salaryRange: "₹20k–₹38k/month Internship", applyUrl: "https://www.naukri.com/job/12", description: "Build UI for analytics and engagement platform. Work with product on dashboards and components." },
+        { id: "j34", title: "Junior Backend Developer", company: "BrowserStack", location: "Mumbai", mode: "Remote", experience: "0-1", skills: ["Ruby", "Rails", "PostgreSQL"], source: "Indeed", postedDaysAgo: 3, salaryRange: "7–12 LPA", applyUrl: "https://www.indeed.com/viewjob?jk=9", description: "Develop and maintain backend services for our testing platform. Global product with high scale." },
+        { id: "j35", title: "React Developer (0-1)", company: "Dunzo", location: "Bangalore", mode: "Hybrid", experience: "0-1", skills: ["React", "TypeScript", "Redux"], source: "LinkedIn", postedDaysAgo: 5, salaryRange: "6–10 LPA", applyUrl: "https://www.linkedin.com/jobs/view/14", description: "Build customer and partner app experiences. Fast-paced hyperlocal delivery product." },
+        { id: "j36", title: "Graduate Engineer Trainee", company: "Tech Mahindra", location: "Pune", mode: "Onsite", experience: "Fresher", skills: ["Java", "Python", "SQL"], source: "Naukri", postedDaysAgo: 10, salaryRange: "3–5 LPA", applyUrl: "https://www.naukri.com/job/13", description: "GET program with training in emerging tech. Deployed to telecom, BFSI or healthcare projects." },
+        { id: "j37", title: "Data Analyst Intern", company: "Mu Sigma", location: "Bangalore", mode: "Onsite", experience: "Fresher", skills: ["R", "SQL", "Statistics"], source: "LinkedIn", postedDaysAgo: 4, salaryRange: "₹22k–₹40k/month Internship", applyUrl: "https://www.linkedin.com/jobs/view/15", description: "Support analytics and decision science projects. Work with large datasets and visualization." },
+        { id: "j38", title: "Python Developer (1-3)", company: "Practo", location: "Bangalore", mode: "Hybrid", experience: "1-3", skills: ["Python", "Django", "Celery"], source: "Indeed", postedDaysAgo: 2, salaryRange: "8–15 LPA", applyUrl: "https://www.indeed.com/viewjob?jk=10", description: "Build healthcare platform backend. APIs for appointments, prescriptions and teleconsultation." },
+        { id: "j39", title: "QA Intern", company: "MakeMyTrip", location: "Gurgaon", mode: "Onsite", experience: "Fresher", skills: ["Selenium", "Java", "API Testing"], source: "Naukri", postedDaysAgo: 6, salaryRange: "₹25k–₹42k/month Internship", applyUrl: "https://www.naukri.com/job/14", description: "Test web and mobile apps for travel products. Learn test automation and release processes." },
+        { id: "j40", title: "Java Developer (0-1)", company: "CitiusTech", location: "Mumbai", mode: "Hybrid", experience: "0-1", skills: ["Java", "Spring", "Healthcare"], source: "LinkedIn", postedDaysAgo: 1, salaryRange: "4–7 LPA", applyUrl: "https://www.linkedin.com/jobs/view/16", description: "Develop healthcare technology solutions. Work on integration and data pipelines for clients." },
+        { id: "j41", title: "SDE Intern", company: "Deutsche Bank", location: "Pune", mode: "Hybrid", experience: "Fresher", skills: ["Java", "Python", "SQL"], source: "Indeed", postedDaysAgo: 0, salaryRange: "₹40k–₹60k/month Internship", applyUrl: "https://www.indeed.com/viewjob?jk=11", description: "Technology internship in global markets or corporate bank. Exposure to financial systems and data." },
+        { id: "j42", title: "Frontend Intern", company: "InMobi", location: "Bangalore", mode: "Remote", experience: "Fresher", skills: ["React", "JavaScript", "Ad Tech"], source: "Naukri", postedDaysAgo: 8, salaryRange: "₹28k–₹48k/month Internship", applyUrl: "https://www.naukri.com/job/15", description: "Build UI for ad tech platform. Work on dashboards and reporting for advertisers and publishers." },
+        { id: "j43", title: "React Developer (1-3)", company: "Livspace", location: "Bangalore", mode: "Onsite", experience: "1-3", skills: ["React", "Next.js", "TypeScript"], source: "LinkedIn", postedDaysAgo: 3, salaryRange: "10–16 LPA", applyUrl: "https://www.linkedin.com/jobs/view/17", description: "Build customer and interior designer experiences. E-commerce and design tech product." },
+        { id: "j44", title: "Junior Backend Developer", company: "Groww", location: "Bangalore", mode: "Remote", experience: "0-1", skills: ["Java", "Spring Boot", "Kafka"], source: "Indeed", postedDaysAgo: 2, salaryRange: "8–14 LPA", applyUrl: "https://www.indeed.com/viewjob?jk=12", description: "Build backend for investment and trading platform. High reliability and compliance requirements." },
+        { id: "j45", title: "Graduate Engineer Trainee", company: "Mindtree", location: "Bangalore", mode: "Onsite", experience: "Fresher", skills: ["Java", "Cloud", "DevOps"], source: "Naukri", postedDaysAgo: 5, salaryRange: "3–5 LPA", applyUrl: "https://www.naukri.com/job/16", description: "GET program with digital and cloud focus. Training followed by project deployment." },
+        { id: "j46", title: "Python Developer (Fresher)", company: "Quantiphi", location: "Mumbai", mode: "Hybrid", experience: "Fresher", skills: ["Python", "ML", "Data"], source: "LinkedIn", postedDaysAgo: 4, salaryRange: "4–6 LPA", applyUrl: "https://www.linkedin.com/jobs/view/18", description: "Work on ML and data engineering projects. Python-based solutions for enterprise clients." },
+        { id: "j47", title: "Data Analyst Intern", company: "Cure.fit", location: "Bangalore", mode: "Hybrid", experience: "Fresher", skills: ["SQL", "Python", "Tableau"], source: "Indeed", postedDaysAgo: 1, salaryRange: "₹22k–₹40k/month Internship", applyUrl: "https://www.indeed.com/viewjob?jk=13", description: "Analyze user and fitness data. Support growth and product teams with reports and insights." },
+        { id: "j48", title: "Java Developer (1-3)", company: "EPAM", location: "Hyderabad", mode: "Remote", experience: "1-3", skills: ["Java", "AWS", "Microservices"], source: "Naukri", postedDaysAgo: 7, salaryRange: "8–14 LPA", applyUrl: "https://www.naukri.com/job/17", description: "Develop solutions for global clients. Work on cloud-native and modern Java stack." },
+        { id: "j49", title: "QA Intern", company: "MediaTek", location: "Bangalore", mode: "Onsite", experience: "Fresher", skills: ["Python", "Automation", "Embedded"], source: "LinkedIn", postedDaysAgo: 9, salaryRange: "₹30k–₹50k/month Internship", applyUrl: "https://www.linkedin.com/jobs/view/19", description: "Test software for semiconductor and connectivity products. Scripting and test framework development." },
+        { id: "j50", title: "SDE Intern", company: "Goldman Sachs", location: "Bangalore", mode: "Hybrid", experience: "Fresher", skills: ["Java", "Python", "Algorithms"], source: "Indeed", postedDaysAgo: 0, salaryRange: "₹50k–₹70k/month Internship", applyUrl: "https://www.indeed.com/viewjob?jk=14", description: "Summer internship in engineering. Work on platforms for trading, risk or operations." },
+        { id: "j51", title: "React Developer (0-1)", company: "Licious", location: "Bangalore", mode: "Hybrid", experience: "0-1", skills: ["React", "Redux", "PWA"], source: "Naukri", postedDaysAgo: 3, salaryRange: "5–9 LPA", applyUrl: "https://www.naukri.com/job/18", description: "Build D2C meat delivery app and internal tools. Consumer product with strong design focus." },
+        { id: "j52", title: "Backend Developer (0-1)", company: "Slice", location: "Bangalore", mode: "Remote", experience: "0-1", skills: ["Go", "PostgreSQL", "Kafka"], source: "LinkedIn", postedDaysAgo: 2, salaryRange: "7–12 LPA", applyUrl: "https://www.linkedin.com/jobs/view/20", description: "Build fintech backend for card and payments. High growth startup with strong engineering culture." },
+        { id: "j53", title: "Frontend Intern", company: "Vedantu", location: "Bangalore", mode: "Remote", experience: "Fresher", skills: ["React", "JavaScript", "WebRTC"], source: "Indeed", postedDaysAgo: 5, salaryRange: "₹20k–₹38k/month Internship", applyUrl: "https://www.indeed.com/viewjob?jk=15", description: "Work on live class and learning platform UI. Real-time and video experience." },
+        { id: "j54", title: "Java Developer (0-1)", company: "Publicis Sapient", location: "Gurgaon", mode: "Hybrid", experience: "0-1", skills: ["Java", "Spring", "Cloud"], source: "Naukri", postedDaysAgo: 6, salaryRange: "5–8 LPA", applyUrl: "https://www.naukri.com/job/19", description: "Develop digital transformation solutions. Work with global brands on cloud and modern Java." },
+        { id: "j55", title: "Python Developer (1-3)", company: "Wingify", location: "Delhi", mode: "Remote", experience: "1-3", skills: ["Python", "Django", "React"], source: "LinkedIn", postedDaysAgo: 1, salaryRange: "10–18 LPA", applyUrl: "https://www.linkedin.com/jobs/view/21", description: "Build A/B testing and personalization platform. Full-stack role with product ownership." },
+        { id: "j56", title: "Graduate Engineer Trainee", company: "Persistent", location: "Pune", mode: "Onsite", experience: "Fresher", skills: ["Java", "Angular", "AWS"], source: "Indeed", postedDaysAgo: 8, salaryRange: "3–5 LPA", applyUrl: "https://www.indeed.com/viewjob?jk=16", description: "GET program in software product engineering. Training and project assignment in product teams." },
+        { id: "j57", title: "Data Analyst Intern", company: "Dream11", location: "Mumbai", mode: "Hybrid", experience: "Fresher", skills: ["Python", "SQL", "Pandas"], source: "Naukri", postedDaysAgo: 4, salaryRange: "₹28k–₹48k/month Internship", applyUrl: "https://www.naukri.com/job/20", description: "Analyze user and fantasy sports data. Support product and growth with metrics and experiments." },
+        { id: "j58", title: "QA Intern", company: "InfoEdge", location: "Noida", mode: "Onsite", experience: "Fresher", skills: ["Selenium", "API Testing", "JMeter"], source: "LinkedIn", postedDaysAgo: 10, salaryRange: "₹22k–₹40k/month Internship", applyUrl: "https://www.linkedin.com/jobs/view/22", description: "Test Naukri, Jeevansathi or other products. Performance and functional testing exposure." },
+        { id: "j59", title: "React Developer (1-3)", company: "Meesho", location: "Bangalore", mode: "Hybrid", experience: "1-3", skills: ["React", "React Native", "GraphQL"], source: "Indeed", postedDaysAgo: 0, salaryRange: "12–20 LPA", applyUrl: "https://www.indeed.com/viewjob?jk=17", description: "Build seller and reseller app experiences. Social commerce at scale with React and React Native." },
+        { id: "j60", title: "Junior Backend Developer", company: "Rebel Foods", location: "Mumbai", mode: "Remote", experience: "0-1", skills: ["Node.js", "MongoDB", "AWS"], source: "Naukri", postedDaysAgo: 2, salaryRange: "6–10 LPA", applyUrl: "https://www.naukri.com/job/21", description: "Build backend for cloud kitchens and delivery. Order and inventory systems for multi-brand ops." }
+      ];
 
-        function getRoute() {
-          var hash = window.location.hash.slice(1) || "/";
-          var path = hash.charAt(0) === "/" ? hash.slice(1) : hash;
-          var segment = (path.split("/")[0] || "").toLowerCase();
-          return segment || DEFAULT_ROUTE;
+      function getRoute() {
+        var hash = window.location.hash.slice(1) || "/";
+        var path = hash.charAt(0) === "/" ? hash.slice(1) : hash;
+        var segment = (path.split("/")[0] || "").toLowerCase();
+        return segment || DEFAULT_ROUTE;
+      }
+
+      function getPreferences() {
+        try {
+          var raw = localStorage.getItem(PREF_KEY);
+          return raw ? JSON.parse(raw) : null;
+        } catch (e) { return null; }
+      }
+      function savePreferences(prefs) {
+        try {
+          localStorage.setItem(PREF_KEY, JSON.stringify(prefs));
+        } catch (e) { }
+      }
+      function parseCommaList(s) {
+        if (!s || typeof s !== "string") return [];
+        return s.split(/[,\s]+/).map(function (x) { return x.trim(); }).filter(Boolean);
+      }
+
+      function computeMatchScore(job, prefs) {
+        if (!prefs) return 0;
+        var score = 0;
+        var roleKeywords = prefs.roleKeywords || [];
+        var title = (job.title || "").toLowerCase();
+        var desc = (job.description || "").toLowerCase();
+        for (var i = 0; i < roleKeywords.length; i++) {
+          var kw = roleKeywords[i].toLowerCase();
+          if (kw && title.indexOf(kw) !== -1) { score += 25; break; }
         }
-
-        function getPreferences() {
-          try {
-            var raw = localStorage.getItem(PREF_KEY);
-            return raw ? JSON.parse(raw) : null;
-          } catch (e) { return null; }
+        for (var j = 0; j < roleKeywords.length; j++) {
+          var kw2 = roleKeywords[j].toLowerCase();
+          if (kw2 && desc.indexOf(kw2) !== -1) { score += 15; break; }
         }
-        function savePreferences(prefs) {
-          try {
-            localStorage.setItem(PREF_KEY, JSON.stringify(prefs));
-          } catch (e) {}
-        }
-        function parseCommaList(s) {
-          if (!s || typeof s !== "string") return [];
-          return s.split(/[,\s]+/).map(function (x) { return x.trim(); }).filter(Boolean);
-        }
-
-        function computeMatchScore(job, prefs) {
-          if (!prefs) return 0;
-          var score = 0;
-          var roleKeywords = prefs.roleKeywords || [];
-          var title = (job.title || "").toLowerCase();
-          var desc = (job.description || "").toLowerCase();
-          for (var i = 0; i < roleKeywords.length; i++) {
-            var kw = roleKeywords[i].toLowerCase();
-            if (kw && title.indexOf(kw) !== -1) { score += 25; break; }
+        var locs = prefs.preferredLocations || [];
+        if (locs.length && locs.indexOf(job.location) !== -1) score += 15;
+        var modes = prefs.preferredMode || [];
+        if (modes.length && modes.indexOf(job.mode) !== -1) score += 10;
+        if (prefs.experienceLevel && job.experience === prefs.experienceLevel) score += 10;
+        var userSkills = (prefs.skills || []).map(function (x) { return x.toLowerCase(); });
+        var jobSkills = (job.skills || []).map(function (x) { return (x || "").toLowerCase(); });
+        for (var k = 0; k < userSkills.length; k++) {
+          for (var m = 0; m < jobSkills.length; m++) {
+            if (userSkills[k] && jobSkills[m] && jobSkills[m].indexOf(userSkills[k]) !== -1 || userSkills[k] === jobSkills[m]) { score += 15; k = userSkills.length; break; }
           }
-          for (var j = 0; j < roleKeywords.length; j++) {
-            var kw2 = roleKeywords[j].toLowerCase();
-            if (kw2 && desc.indexOf(kw2) !== -1) { score += 15; break; }
+        }
+        if ((job.postedDaysAgo || 99) <= 2) score += 5;
+        if (job.source === "LinkedIn") score += 5;
+        return score > 100 ? 100 : score;
+      }
+
+      function matchScoreBadgeClass(score) {
+        if (score >= 80) return "badge--score-green";
+        if (score >= 60) return "badge--score-amber";
+        if (score >= 40) return "badge--score-neutral";
+        return "badge--score-low";
+      }
+
+      function getSavedIds() {
+        try {
+          var raw = localStorage.getItem(SAVED_KEY);
+          return raw ? JSON.parse(raw) : [];
+        } catch (e) { return []; }
+      }
+      function saveJob(id) {
+        var ids = getSavedIds();
+        if (ids.indexOf(id) === -1) ids.push(id);
+        localStorage.setItem(SAVED_KEY, JSON.stringify(ids));
+      }
+      function unsaveJob(id) {
+        var ids = getSavedIds().filter(function (x) { return x !== id; });
+        localStorage.setItem(SAVED_KEY, JSON.stringify(ids));
+      }
+      function isSaved(id) { return getSavedIds().indexOf(id) !== -1; }
+      function getJobById(id) {
+        for (var i = 0; i < JOBS.length; i++) if (JOBS[i].id === id) return JOBS[i];
+        return null;
+      }
+      function postedText(days) {
+        if (days === 0) return "Today";
+        if (days === 1) return "1 day ago";
+        return days + " days ago";
+      }
+      function sourceClass(s) {
+        if (s === "LinkedIn") return "badge--linkedin";
+        if (s === "Naukri") return "badge--naukri";
+        return "badge--indeed";
+      }
+      function parseSalary(s) {
+        if (!s || typeof s !== "string") return 0;
+        var m = /(\d+(?:\.\d+)?)\s*(?:k|L|LPA)?/.exec(s);
+        return m ? parseFloat(m[1], 10) : 0;
+      }
+
+      function filterAndSortJobs() {
+        var keyword = (document.getElementById("filter-keyword") && document.getElementById("filter-keyword").value) ? document.getElementById("filter-keyword").value.trim().toLowerCase() : "";
+        var location = document.getElementById("filter-location") ? document.getElementById("filter-location").value : "";
+        var mode = document.getElementById("filter-mode") ? document.getElementById("filter-mode").value : "";
+        var experience = document.getElementById("filter-experience") ? document.getElementById("filter-experience").value : "";
+        var source = document.getElementById("filter-source") ? document.getElementById("filter-source").value : "";
+        var sort = document.getElementById("filter-sort") ? document.getElementById("filter-sort").value : "latest";
+        var prefs = getPreferences();
+        var list = JOBS.slice();
+        if (keyword) list = list.filter(function (j) { return (j.title && j.title.toLowerCase().indexOf(keyword) !== -1) || (j.company && j.company.toLowerCase().indexOf(keyword) !== -1); });
+        if (location) list = list.filter(function (j) { return j.location === location; });
+        if (mode) list = list.filter(function (j) { return j.mode === mode; });
+        if (experience) list = list.filter(function (j) { return j.experience === experience; });
+        if (source) list = list.filter(function (j) { return j.source === source; });
+        var i, j;
+        for (i = 0; i < list.length; i++) list[i]._matchScore = computeMatchScore(list[i], prefs);
+        var thresholdEl = document.getElementById("filter-above-threshold");
+        var minScore = (prefs && typeof prefs.minMatchScore === "number") ? prefs.minMatchScore : 40;
+        if (thresholdEl && thresholdEl.checked) list = list.filter(function (j) { return (j._matchScore || 0) >= minScore; });
+        if (sort === "latest") list.sort(function (a, b) { return (a.postedDaysAgo || 0) - (b.postedDaysAgo || 0); });
+        else if (sort === "oldest") list.sort(function (a, b) { return (b.postedDaysAgo || 0) - (a.postedDaysAgo || 0); });
+        else if (sort === "match") list.sort(function (a, b) { return (b._matchScore || 0) - (a._matchScore || 0); });
+        else if (sort === "salary") list.sort(function (a, b) { return parseSalary(b.salaryRange) - parseSalary(a.salaryRange); });
+        else if (sort === "company") list.sort(function (a, b) { return (a.company || "").localeCompare(b.company || ""); });
+        return list;
+      }
+      function getDigestKey() {
+        var d = new Date();
+        var y = d.getFullYear();
+        var m = (d.getMonth() + 1) < 10 ? "0" + (d.getMonth() + 1) : (d.getMonth() + 1);
+        var day = d.getDate() < 10 ? "0" + d.getDate() : d.getDate();
+        return y + "-" + m + "-" + day;
+      }
+      function getDigestStorageKey(date) {
+        return "jobTrackerDigest_" + (date || getDigestKey());
+      }
+      function getDigestForToday() {
+        try {
+          var raw = localStorage.getItem(getDigestStorageKey());
+          return raw ? JSON.parse(raw) : null;
+        } catch (e) { return null; }
+      }
+      function saveDigest(payload) {
+        try {
+          localStorage.setItem(getDigestStorageKey(payload.date), JSON.stringify(payload));
+        } catch (e) { }
+      }
+      function generateDigest() {
+        var prefs = getPreferences();
+        if (!prefs) return null;
+        var list = JOBS.slice();
+        var i;
+        for (i = 0; i < list.length; i++) list[i]._matchScore = computeMatchScore(list[i], prefs);
+        list.sort(function (a, b) {
+          var sa = a._matchScore || 0, sb = b._matchScore || 0;
+          if (sb !== sa) return sb - sa;
+          return (a.postedDaysAgo || 99) - (b.postedDaysAgo || 99);
+        });
+        var top10 = list.slice(0, 10);
+        var date = getDigestKey();
+        var payload = { date: date, jobs: top10 };
+        saveDigest(payload);
+        return payload;
+      }
+      function digestToPlainText(digest) {
+        if (!digest || !digest.jobs || !digest.jobs.length) return "";
+        var lines = ["Top 10 Jobs For You — 9AM Digest", "Date: " + digest.date, ""];
+        digest.jobs.forEach(function (job, idx) {
+          lines.push((idx + 1) + ". " + (job.title || "") + " @ " + (job.company || ""));
+          lines.push("   Location: " + (job.location || "") + " | Experience: " + (job.experience || "") + " | Match: " + (job._matchScore || 0) + "%");
+          lines.push("   Apply: " + (job.applyUrl || ""));
+          lines.push("");
+        });
+        lines.push("This digest was generated based on your preferences.");
+        return lines.join("\n");
+      }
+
+      function fillLocationOptions() {
+        var sel = document.getElementById("filter-location");
+        if (!sel) return;
+        while (sel.options.length > 1) sel.removeChild(sel.lastChild);
+        var seen = {};
+        JOBS.forEach(function (j) {
+          if (j.location && !seen[j.location]) { seen[j.location] = true; var opt = document.createElement("option"); opt.setAttribute("value", j.location); opt.textContent = j.location; sel.appendChild(opt); }
+        });
+      }
+
+      function fillPreferredLocationsOptions() {
+        var sel = document.getElementById("pref-preferredLocations");
+        if (!sel) return;
+        sel.innerHTML = "";
+        var seen = {};
+        JOBS.forEach(function (j) {
+          if (j.location && !seen[j.location]) { seen[j.location] = true; var opt = document.createElement("option"); opt.setAttribute("value", j.location); opt.textContent = j.location; sel.appendChild(opt); }
+        });
+      }
+
+      function prefillPreferencesForm() {
+        var prefs = getPreferences();
+        var roleEl = document.getElementById("pref-roleKeywords");
+        var skillsEl = document.getElementById("pref-skills");
+        var experienceEl = document.getElementById("pref-experienceLevel");
+        var sliderEl = document.getElementById("pref-minMatchScore");
+        var valueEl = document.getElementById("pref-minMatchScore-value");
+        if (roleEl) roleEl.value = (prefs && prefs.roleKeywords && prefs.roleKeywords.length) ? prefs.roleKeywords.join(", ") : "";
+        if (skillsEl) skillsEl.value = (prefs && prefs.skills && prefs.skills.length) ? prefs.skills.join(", ") : "";
+        if (experienceEl) experienceEl.value = (prefs && prefs.experienceLevel) ? prefs.experienceLevel : "";
+        if (sliderEl) sliderEl.value = (prefs && typeof prefs.minMatchScore === "number") ? prefs.minMatchScore : 40;
+        if (valueEl) valueEl.textContent = sliderEl ? sliderEl.value : "40";
+        var modeCbs = document.querySelectorAll("input[name=\"pref-mode\"]");
+        var modes = (prefs && prefs.preferredMode) ? prefs.preferredMode : [];
+        modeCbs.forEach(function (cb) { cb.checked = modes.indexOf(cb.value) !== -1; });
+        var locSel = document.getElementById("pref-preferredLocations");
+        if (locSel && prefs && prefs.preferredLocations && prefs.preferredLocations.length) {
+          for (var i = 0; i < locSel.options.length; i++) {
+            locSel.options[i].selected = prefs.preferredLocations.indexOf(locSel.options[i].value) !== -1;
           }
-          var locs = prefs.preferredLocations || [];
-          if (locs.length && locs.indexOf(job.location) !== -1) score += 15;
-          var modes = prefs.preferredMode || [];
-          if (modes.length && modes.indexOf(job.mode) !== -1) score += 10;
-          if (prefs.experienceLevel && job.experience === prefs.experienceLevel) score += 10;
-          var userSkills = (prefs.skills || []).map(function (x) { return x.toLowerCase(); });
-          var jobSkills = (job.skills || []).map(function (x) { return (x || "").toLowerCase(); });
-          for (var k = 0; k < userSkills.length; k++) {
-            for (var m = 0; m < jobSkills.length; m++) {
-              if (userSkills[k] && jobSkills[m] && jobSkills[m].indexOf(userSkills[k]) !== -1 || userSkills[k] === jobSkills[m]) { score += 15; k = userSkills.length; break; }
-            }
-          }
-          if ((job.postedDaysAgo || 99) <= 2) score += 5;
-          if (job.source === "LinkedIn") score += 5;
-          return score > 100 ? 100 : score;
         }
+      }
+      function openModal(job) {
+        var backdrop = document.getElementById("job-modal");
+        var titleEl = document.getElementById("modal-title");
+        var companyEl = document.getElementById("modal-company");
+        var descEl = document.getElementById("modal-description");
+        var skillsEl = document.getElementById("modal-skills");
+        if (!backdrop || !job) return;
+        if (titleEl) titleEl.textContent = job.title || "";
+        if (companyEl) companyEl.textContent = job.company || "";
+        if (descEl) descEl.innerHTML = "<p>" + (job.description || "").replace(/\n/g, "</p><p>") + "</p>";
+        if (skillsEl) {
+          skillsEl.innerHTML = "";
+          (job.skills || []).forEach(function (s) { var span = document.createElement("span"); span.textContent = s; skillsEl.appendChild(span); });
+        }
+        backdrop.setAttribute("aria-hidden", "false");
+        backdrop.classList.add("is-open");
+        backdrop._currentJob = job;
+      }
+      function closeModal() {
+        var backdrop = document.getElementById("job-modal");
+        if (backdrop) { backdrop.classList.remove("is-open"); backdrop.setAttribute("aria-hidden", "true"); backdrop._currentJob = null; }
+      }
+      function renderJobCard(job, container, showMatchScore) {
+        var saved = isSaved(job.id);
+        var score = job._matchScore;
+        if (showMatchScore && score === undefined) score = computeMatchScore(job, getPreferences());
+        var scoreBadge = (showMatchScore && score !== undefined) ? "<span class=\"badge " + matchScoreBadgeClass(score) + "\">" + score + "% match</span>" : "";
+        var card = document.createElement("div");
+        card.className = "job-card";
+        card.setAttribute("data-job-id", job.id);
+        card.innerHTML = "<div class=\"job-card__title\">" + (job.title || "") + "</div><div class=\"job-card__company\">" + (job.company || "") + "</div><div class=\"job-card__meta\"><span>" + (job.location || "") + " · " + (job.mode || "") + "</span><span>" + (job.experience || "") + "</span><span>" + (job.salaryRange || "") + "</span></div><div class=\"job-card__footer\"><div class=\"job-card__badges\">" + scoreBadge + "<span class=\"badge " + sourceClass(job.source || "") + "\">" + (job.source || "") + "</span><span class=\"job-card__posted\">" + postedText(job.postedDaysAgo) + "</span></div><div class=\"job-card__actions\"><button type=\"button\" class=\"btn btn--secondary btn--sm\" data-action=\"view\">View</button><button type=\"button\" class=\"btn " + (saved ? "btn--saved btn--sm\" data-action=\"unsave\">Saved" : "btn--secondary btn--sm\" data-action=\"save\">Save") + "</button><a href=\"" + (job.applyUrl || "#") + "\" target=\"_blank\" rel=\"noopener\" class=\"btn btn--primary btn--sm\">Apply</a></div></div>";
+        container.appendChild(card);
+      }
+      function renderDashboard() {
+        var listEl = document.getElementById("dashboard-job-list");
+        var emptyEl = document.getElementById("dashboard-empty");
+        var bannerEl = document.getElementById("dashboard-prefs-banner");
+        if (!listEl) return;
+        if (bannerEl) bannerEl.style.display = getPreferences() ? "none" : "block";
+        listEl.innerHTML = "";
+        var list = filterAndSortJobs();
+        list.forEach(function (job) { renderJobCard(job, listEl, true); });
+        if (emptyEl) emptyEl.style.display = list.length ? "none" : "block";
+      }
+      function renderSaved() {
+        var listEl = document.getElementById("saved-job-list");
+        var emptyEl = document.getElementById("saved-empty");
+        if (!listEl) return;
+        listEl.innerHTML = "";
+        var ids = getSavedIds();
+        var savedJobs = ids.map(function (id) { return getJobById(id); }).filter(Boolean);
+        savedJobs.forEach(function (job) { renderJobCard(job, listEl); });
+        if (emptyEl) emptyEl.style.display = savedJobs.length ? "none" : "block";
+      }
 
-        function matchScoreBadgeClass(score) {
-          if (score >= 80) return "badge--score-green";
-          if (score >= 60) return "badge--score-amber";
-          if (score >= 40) return "badge--score-neutral";
-          return "badge--score-low";
+      function renderDigest() {
+        var prefs = getPreferences();
+        var noPrefsEl = document.getElementById("digest-no-prefs");
+        var contentEl = document.getElementById("digest-content");
+        var noMatchesEl = document.getElementById("digest-no-matches");
+        var cardWrapEl = document.getElementById("digest-card-wrap");
+        if (!prefs) {
+          if (noPrefsEl) noPrefsEl.style.display = "block";
+          if (contentEl) contentEl.style.display = "none";
+          return;
         }
-
-        function getSavedIds() {
-          try {
-            var raw = localStorage.getItem(SAVED_KEY);
-            return raw ? JSON.parse(raw) : [];
-          } catch (e) { return []; }
+        if (noPrefsEl) noPrefsEl.style.display = "none";
+        if (contentEl) contentEl.style.display = "block";
+        var existing = getDigestForToday();
+        if (existing && existing.jobs && existing.jobs.length) {
+          renderDigestCard(existing);
+        } else {
+          if (noMatchesEl) noMatchesEl.style.display = "none";
+          if (cardWrapEl) cardWrapEl.style.display = "none";
         }
-        function saveJob(id) {
-          var ids = getSavedIds();
-          if (ids.indexOf(id) === -1) ids.push(id);
-          localStorage.setItem(SAVED_KEY, JSON.stringify(ids));
+      }
+      function renderDigestCard(digest) {
+        var noMatchesEl = document.getElementById("digest-no-matches");
+        var cardWrapEl = document.getElementById("digest-card-wrap");
+        var jobListEl = document.getElementById("digest-job-list");
+        var dateEl = document.getElementById("digest-date-subtext");
+        if (!digest || !digest.jobs || !digest.jobs.length) {
+          if (noMatchesEl) noMatchesEl.style.display = "block";
+          if (cardWrapEl) cardWrapEl.style.display = "none";
+          return;
         }
-        function unsaveJob(id) {
-          var ids = getSavedIds().filter(function (x) { return x !== id; });
-          localStorage.setItem(SAVED_KEY, JSON.stringify(ids));
-        }
-        function isSaved(id) { return getSavedIds().indexOf(id) !== -1; }
-        function getJobById(id) {
-          for (var i = 0; i < JOBS.length; i++) if (JOBS[i].id === id) return JOBS[i];
-          return null;
-        }
-        function postedText(days) {
-          if (days === 0) return "Today";
-          if (days === 1) return "1 day ago";
-          return days + " days ago";
-        }
-        function sourceClass(s) {
-          if (s === "LinkedIn") return "badge--linkedin";
-          if (s === "Naukri") return "badge--naukri";
-          return "badge--indeed";
-        }
-        function parseSalary(s) {
-          if (!s || typeof s !== "string") return 0;
-          var m = /(\d+(?:\.\d+)?)\s*(?:k|L|LPA)?/.exec(s);
-          return m ? parseFloat(m[1], 10) : 0;
-        }
-
-        function filterAndSortJobs() {
-          var keyword = (document.getElementById("filter-keyword") && document.getElementById("filter-keyword").value) ? document.getElementById("filter-keyword").value.trim().toLowerCase() : "";
-          var location = document.getElementById("filter-location") ? document.getElementById("filter-location").value : "";
-          var mode = document.getElementById("filter-mode") ? document.getElementById("filter-mode").value : "";
-          var experience = document.getElementById("filter-experience") ? document.getElementById("filter-experience").value : "";
-          var source = document.getElementById("filter-source") ? document.getElementById("filter-source").value : "";
-          var sort = document.getElementById("filter-sort") ? document.getElementById("filter-sort").value : "latest";
-          var prefs = getPreferences();
-          var list = JOBS.slice();
-          if (keyword) list = list.filter(function (j) { return (j.title && j.title.toLowerCase().indexOf(keyword) !== -1) || (j.company && j.company.toLowerCase().indexOf(keyword) !== -1); });
-          if (location) list = list.filter(function (j) { return j.location === location; });
-          if (mode) list = list.filter(function (j) { return j.mode === mode; });
-          if (experience) list = list.filter(function (j) { return j.experience === experience; });
-          if (source) list = list.filter(function (j) { return j.source === source; });
-          var i, j;
-          for (i = 0; i < list.length; i++) list[i]._matchScore = computeMatchScore(list[i], prefs);
-          var thresholdEl = document.getElementById("filter-above-threshold");
-          var minScore = (prefs && typeof prefs.minMatchScore === "number") ? prefs.minMatchScore : 40;
-          if (thresholdEl && thresholdEl.checked) list = list.filter(function (j) { return (j._matchScore || 0) >= minScore; });
-          if (sort === "latest") list.sort(function (a, b) { return (a.postedDaysAgo || 0) - (b.postedDaysAgo || 0); });
-          else if (sort === "oldest") list.sort(function (a, b) { return (b.postedDaysAgo || 0) - (a.postedDaysAgo || 0); });
-          else if (sort === "match") list.sort(function (a, b) { return (b._matchScore || 0) - (a._matchScore || 0); });
-          else if (sort === "salary") list.sort(function (a, b) { return parseSalary(b.salaryRange) - parseSalary(a.salaryRange); });
-          else if (sort === "company") list.sort(function (a, b) { return (a.company || "").localeCompare(b.company || ""); });
-          return list;
-        }
-        function fillLocationOptions() {
-          var sel = document.getElementById("filter-location");
-          if (!sel) return;
-          while (sel.options.length > 1) sel.removeChild(sel.lastChild);
-          var seen = {};
-          JOBS.forEach(function (j) {
-            if (j.location && !seen[j.location]) { seen[j.location] = true; var opt = document.createElement("option"); opt.setAttribute("value", j.location); opt.textContent = j.location; sel.appendChild(opt); }
+        if (noMatchesEl) noMatchesEl.style.display = "none";
+        if (cardWrapEl) cardWrapEl.style.display = "block";
+        if (dateEl) dateEl.textContent = digest.date || getDigestKey();
+        if (jobListEl) {
+          jobListEl.innerHTML = "";
+          digest.jobs.forEach(function (job) {
+            var score = job._matchScore || 0;
+            var row = document.createElement("div");
+            row.className = "digest-job";
+            row.innerHTML = '<div class="digest-job__main">' +
+              '<p class="digest-job__title">' + (job.title || "") + ' — ' + (job.company || "") + '</p>' +
+              '<p class="digest-job__meta">' + (job.location || "") + ' · ' + (job.experience || "") + '</p>' +
+              '</div>' +
+              '<div class="digest-job__score"><span class="badge ' + matchScoreBadgeClass(score) + '">' + score + '% match</span></div>' +
+              '<a href="' + (job.applyUrl || "#") + '" target="_blank" rel="noopener" class="btn btn--primary btn--sm">Apply</a>';
+            jobListEl.appendChild(row);
           });
         }
+      }
 
-        function fillPreferredLocationsOptions() {
-          var sel = document.getElementById("pref-preferredLocations");
-          if (!sel) return;
-          sel.innerHTML = "";
-          var seen = {};
-          JOBS.forEach(function (j) {
-            if (j.location && !seen[j.location]) { seen[j.location] = true; var opt = document.createElement("option"); opt.setAttribute("value", j.location); opt.textContent = j.location; sel.appendChild(opt); }
-          });
-        }
+      function render(route) {
+        var pages = document.querySelectorAll(".route-page");
+        var links = document.querySelectorAll(".nav__link[data-route]");
+        route = route || getRoute();
+        if (!document.getElementById("page-" + route)) route = DEFAULT_ROUTE;
+        pages.forEach(function (page) {
+          page.classList.toggle("is-active", page.getAttribute("data-route") === route);
+        });
+        links.forEach(function (link) {
+          link.classList.toggle("is-active", link.getAttribute("data-route") === route);
+        });
+        if (route === "dashboard") { fillLocationOptions(); renderDashboard(); }
+        if (route === "saved") renderSaved();
+        if (route === "digest") renderDigest();
+        if (route === "settings") { fillPreferredLocationsOptions(); prefillPreferencesForm(); }
+      }
 
-        function prefillPreferencesForm() {
-          var prefs = getPreferences();
-          var roleEl = document.getElementById("pref-roleKeywords");
-          var skillsEl = document.getElementById("pref-skills");
-          var experienceEl = document.getElementById("pref-experienceLevel");
-          var sliderEl = document.getElementById("pref-minMatchScore");
-          var valueEl = document.getElementById("pref-minMatchScore-value");
-          if (roleEl) roleEl.value = (prefs && prefs.roleKeywords && prefs.roleKeywords.length) ? prefs.roleKeywords.join(", ") : "";
-          if (skillsEl) skillsEl.value = (prefs && prefs.skills && prefs.skills.length) ? prefs.skills.join(", ") : "";
-          if (experienceEl) experienceEl.value = (prefs && prefs.experienceLevel) ? prefs.experienceLevel : "";
-          if (sliderEl) sliderEl.value = (prefs && typeof prefs.minMatchScore === "number") ? prefs.minMatchScore : 40;
-          if (valueEl) valueEl.textContent = sliderEl ? sliderEl.value : "40";
-          var modeCbs = document.querySelectorAll("input[name=\"pref-mode\"]");
-          var modes = (prefs && prefs.preferredMode) ? prefs.preferredMode : [];
-          modeCbs.forEach(function (cb) { cb.checked = modes.indexOf(cb.value) !== -1; });
-          var locSel = document.getElementById("pref-preferredLocations");
-          if (locSel && prefs && prefs.preferredLocations && prefs.preferredLocations.length) {
-            for (var i = 0; i < locSel.options.length; i++) {
-              locSel.options[i].selected = prefs.preferredLocations.indexOf(locSel.options[i].value) !== -1;
-            }
+      function openDrawer() {
+        var drawer = document.getElementById("nav-drawer");
+        var hamburger = document.getElementById("nav-hamburger");
+        if (drawer) drawer.classList.add("is-open");
+        if (hamburger) hamburger.setAttribute("aria-expanded", "true");
+      }
+      function closeDrawer() {
+        var drawer = document.getElementById("nav-drawer");
+        var hamburger = document.getElementById("nav-hamburger");
+        if (drawer) drawer.classList.remove("is-open");
+        if (hamburger) hamburger.setAttribute("aria-expanded", "false");
+      }
+
+      var filterKeyword = document.getElementById("filter-keyword");
+      if (filterKeyword) { filterKeyword.addEventListener("input", renderDashboard); filterKeyword.addEventListener("keyup", renderDashboard); }
+      ["filter-location", "filter-mode", "filter-experience", "filter-source", "filter-sort"].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.addEventListener("change", renderDashboard);
+      });
+      var thresholdCb = document.getElementById("filter-above-threshold");
+      if (thresholdCb) thresholdCb.addEventListener("change", renderDashboard);
+
+      document.getElementById("btn-save-prefs").addEventListener("click", function () {
+        var roleKeywords = parseCommaList(document.getElementById("pref-roleKeywords").value);
+        var locSel = document.getElementById("pref-preferredLocations");
+        var preferredLocations = [];
+        if (locSel) for (var i = 0; i < locSel.options.length; i++) { if (locSel.options[i].selected) preferredLocations.push(locSel.options[i].value); }
+        var preferredMode = [];
+        document.querySelectorAll("input[name=\"pref-mode\"]:checked").forEach(function (cb) { preferredMode.push(cb.value); });
+        var experienceLevel = document.getElementById("pref-experienceLevel").value || "";
+        var skills = parseCommaList(document.getElementById("pref-skills").value);
+        var minMatchScore = parseInt(document.getElementById("pref-minMatchScore").value, 10) || 40;
+        savePreferences({ roleKeywords: roleKeywords, preferredLocations: preferredLocations, preferredMode: preferredMode, experienceLevel: experienceLevel, skills: skills, minMatchScore: minMatchScore });
+        prefillPreferencesForm();
+      });
+      document.getElementById("pref-minMatchScore").addEventListener("input", function () {
+        var v = document.getElementById("pref-minMatchScore-value");
+        if (v) v.textContent = this.value;
+      });
+
+      document.getElementById("job-modal").addEventListener("click", function (e) {
+        if (e.target === this) closeModal();
+      });
+      document.getElementById("modal-close").addEventListener("click", closeModal);
+      document.getElementById("modal-apply").addEventListener("click", function () {
+        var job = document.getElementById("job-modal")._currentJob;
+        if (job && job.applyUrl) window.open(job.applyUrl, "_blank", "noopener");
+      });
+      document.getElementById("modal-save").addEventListener("click", function () {
+        var job = document.getElementById("job-modal")._currentJob;
+        if (job) { saveJob(job.id); closeModal(); renderDashboard(); renderSaved(); }
+      });
+
+      document.getElementById("dashboard-job-list").addEventListener("click", function (e) {
+        var card = e.target.closest(".job-card");
+        var btn = e.target.closest("[data-action]");
+        if (!card || !btn) return;
+        var id = card.getAttribute("data-job-id");
+        var job = getJobById(id);
+        if (!job) return;
+        if (btn.getAttribute("data-action") === "view") openModal(job);
+        if (btn.getAttribute("data-action") === "save") { saveJob(id); renderDashboard(); renderSaved(); }
+        if (btn.getAttribute("data-action") === "unsave") { unsaveJob(id); renderDashboard(); renderSaved(); }
+      });
+      document.getElementById("saved-job-list").addEventListener("click", function (e) {
+        var card = e.target.closest(".job-card");
+        var btn = e.target.closest("[data-action]");
+        if (!card || !btn) return;
+        var id = card.getAttribute("data-job-id");
+        var job = getJobById(id);
+        if (!job) return;
+        if (btn.getAttribute("data-action") === "view") openModal(job);
+        if (btn.getAttribute("data-action") === "unsave") { unsaveJob(id); renderSaved(); renderDashboard(); }
+      });
+
+      /* ── Digest event handlers ── */
+      var digestGenBtn = document.getElementById("digest-generate-btn");
+      if (digestGenBtn) {
+        digestGenBtn.addEventListener("click", function () {
+          var existing = getDigestForToday();
+          if (existing && existing.jobs && existing.jobs.length) {
+            renderDigestCard(existing);
+            return;
           }
-        }
-        function openModal(job) {
-          var backdrop = document.getElementById("job-modal");
-          var titleEl = document.getElementById("modal-title");
-          var companyEl = document.getElementById("modal-company");
-          var descEl = document.getElementById("modal-description");
-          var skillsEl = document.getElementById("modal-skills");
-          if (!backdrop || !job) return;
-          if (titleEl) titleEl.textContent = job.title || "";
-          if (companyEl) companyEl.textContent = job.company || "";
-          if (descEl) descEl.innerHTML = "<p>" + (job.description || "").replace(/\n/g, "</p><p>") + "</p>";
-          if (skillsEl) {
-            skillsEl.innerHTML = "";
-            (job.skills || []).forEach(function (s) { var span = document.createElement("span"); span.textContent = s; skillsEl.appendChild(span); });
+          var digest = generateDigest();
+          if (!digest || !digest.jobs || !digest.jobs.length) {
+            var noMatchesEl = document.getElementById("digest-no-matches");
+            var cardWrapEl = document.getElementById("digest-card-wrap");
+            if (noMatchesEl) noMatchesEl.style.display = "block";
+            if (cardWrapEl) cardWrapEl.style.display = "none";
+            return;
           }
-          backdrop.setAttribute("aria-hidden", "false");
-          backdrop.classList.add("is-open");
-          backdrop._currentJob = job;
-        }
-        function closeModal() {
-          var backdrop = document.getElementById("job-modal");
-          if (backdrop) { backdrop.classList.remove("is-open"); backdrop.setAttribute("aria-hidden", "true"); backdrop._currentJob = null; }
-        }
-        function renderJobCard(job, container, showMatchScore) {
-          var saved = isSaved(job.id);
-          var score = job._matchScore;
-          if (showMatchScore && score === undefined) score = computeMatchScore(job, getPreferences());
-          var scoreBadge = (showMatchScore && score !== undefined) ? "<span class=\"badge " + matchScoreBadgeClass(score) + "\">" + score + "% match</span>" : "";
-          var card = document.createElement("div");
-          card.className = "job-card";
-          card.setAttribute("data-job-id", job.id);
-          card.innerHTML = "<div class=\"job-card__title\">" + (job.title || "") + "</div><div class=\"job-card__company\">" + (job.company || "") + "</div><div class=\"job-card__meta\"><span>" + (job.location || "") + " · " + (job.mode || "") + "</span><span>" + (job.experience || "") + "</span><span>" + (job.salaryRange || "") + "</span></div><div class=\"job-card__footer\"><div class=\"job-card__badges\">" + scoreBadge + "<span class=\"badge " + sourceClass(job.source || "") + "\">" + (job.source || "") + "</span><span class=\"job-card__posted\">" + postedText(job.postedDaysAgo) + "</span></div><div class=\"job-card__actions\"><button type=\"button\" class=\"btn btn--secondary btn--sm\" data-action=\"view\">View</button><button type=\"button\" class=\"btn " + (saved ? "btn--saved btn--sm\" data-action=\"unsave\">Saved" : "btn--secondary btn--sm\" data-action=\"save\">Save") + "</button><a href=\"" + (job.applyUrl || "#") + "\" target=\"_blank\" rel=\"noopener\" class=\"btn btn--primary btn--sm\">Apply</a></div></div>";
-          container.appendChild(card);
-        }
-        function renderDashboard() {
-          var listEl = document.getElementById("dashboard-job-list");
-          var emptyEl = document.getElementById("dashboard-empty");
-          var bannerEl = document.getElementById("dashboard-prefs-banner");
-          if (!listEl) return;
-          if (bannerEl) bannerEl.style.display = getPreferences() ? "none" : "block";
-          listEl.innerHTML = "";
-          var list = filterAndSortJobs();
-          list.forEach(function (job) { renderJobCard(job, listEl, true); });
-          if (emptyEl) emptyEl.style.display = list.length ? "none" : "block";
-        }
-        function renderSaved() {
-          var listEl = document.getElementById("saved-job-list");
-          var emptyEl = document.getElementById("saved-empty");
-          if (!listEl) return;
-          listEl.innerHTML = "";
-          var ids = getSavedIds();
-          var savedJobs = ids.map(function (id) { return getJobById(id); }).filter(Boolean);
-          savedJobs.forEach(function (job) { renderJobCard(job, listEl); });
-          if (emptyEl) emptyEl.style.display = savedJobs.length ? "none" : "block";
-        }
+          renderDigestCard(digest);
+        });
+      }
+      var digestCopyBtn = document.getElementById("digest-copy-btn");
+      if (digestCopyBtn) {
+        digestCopyBtn.addEventListener("click", function () {
+          var digest = getDigestForToday();
+          if (!digest) return;
+          var text = digestToPlainText(digest);
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(function () {
+              digestCopyBtn.textContent = "Copied!";
+              setTimeout(function () { digestCopyBtn.textContent = "Copy Digest to Clipboard"; }, 2000);
+            });
+          } else {
+            var ta = document.createElement("textarea");
+            ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand("copy"); digestCopyBtn.textContent = "Copied!"; setTimeout(function () { digestCopyBtn.textContent = "Copy Digest to Clipboard"; }, 2000); } catch (e) { }
+            document.body.removeChild(ta);
+          }
+        });
+      }
+      var digestEmailBtn = document.getElementById("digest-email-btn");
+      if (digestEmailBtn) {
+        digestEmailBtn.addEventListener("click", function () {
+          var digest = getDigestForToday();
+          if (!digest) return;
+          var text = digestToPlainText(digest);
+          var subject = encodeURIComponent("My 9AM Job Digest");
+          var body = encodeURIComponent(text);
+          window.open("mailto:?subject=" + subject + "&body=" + body, "_self");
+        });
+      }
 
-        function render(route) {
-          var pages = document.querySelectorAll(".route-page");
-          var links = document.querySelectorAll(".nav__link[data-route]");
-          route = route || getRoute();
-          if (!document.getElementById("page-" + route)) route = DEFAULT_ROUTE;
-          pages.forEach(function (page) {
-            page.classList.toggle("is-active", page.getAttribute("data-route") === route);
-          });
-          links.forEach(function (link) {
-            link.classList.toggle("is-active", link.getAttribute("data-route") === route);
-          });
-          if (route === "dashboard") { fillLocationOptions(); renderDashboard(); }
-          if (route === "saved") renderSaved();
-          if (route === "settings") { fillPreferredLocationsOptions(); prefillPreferencesForm(); }
-        }
+      window.addEventListener("hashchange", function () { render(); });
+      document.getElementById("nav-hamburger").addEventListener("click", function () {
+        if (this.getAttribute("aria-expanded") === "true") closeDrawer();
+        else openDrawer();
+      });
+      document.getElementById("nav-drawer-close").addEventListener("click", closeDrawer);
+      document.querySelectorAll("#nav-drawer .nav__link").forEach(function (link) {
+        link.addEventListener("click", closeDrawer);
+      });
 
-        function openDrawer() {
-          var drawer = document.getElementById("nav-drawer");
-          var hamburger = document.getElementById("nav-hamburger");
-          if (drawer) drawer.classList.add("is-open");
-          if (hamburger) hamburger.setAttribute("aria-expanded", "true");
-        }
-        function closeDrawer() {
-          var drawer = document.getElementById("nav-drawer");
-          var hamburger = document.getElementById("nav-hamburger");
-          if (drawer) drawer.classList.remove("is-open");
-          if (hamburger) hamburger.setAttribute("aria-expanded", "false");
-        }
+      fillLocationOptions();
+      render();
+    })();
+  </script>
+</body>
 
-        var filterKeyword = document.getElementById("filter-keyword");
-        if (filterKeyword) { filterKeyword.addEventListener("input", renderDashboard); filterKeyword.addEventListener("keyup", renderDashboard); }
-        ["filter-location", "filter-mode", "filter-experience", "filter-source", "filter-sort"].forEach(function (id) {
-          var el = document.getElementById(id);
-          if (el) el.addEventListener("change", renderDashboard);
-        });
-        var thresholdCb = document.getElementById("filter-above-threshold");
-        if (thresholdCb) thresholdCb.addEventListener("change", renderDashboard);
-
-        document.getElementById("btn-save-prefs").addEventListener("click", function () {
-          var roleKeywords = parseCommaList(document.getElementById("pref-roleKeywords").value);
-          var locSel = document.getElementById("pref-preferredLocations");
-          var preferredLocations = [];
-          if (locSel) for (var i = 0; i < locSel.options.length; i++) { if (locSel.options[i].selected) preferredLocations.push(locSel.options[i].value); }
-          var preferredMode = [];
-          document.querySelectorAll("input[name=\"pref-mode\"]:checked").forEach(function (cb) { preferredMode.push(cb.value); });
-          var experienceLevel = document.getElementById("pref-experienceLevel").value || "";
-          var skills = parseCommaList(document.getElementById("pref-skills").value);
-          var minMatchScore = parseInt(document.getElementById("pref-minMatchScore").value, 10) || 40;
-          savePreferences({ roleKeywords: roleKeywords, preferredLocations: preferredLocations, preferredMode: preferredMode, experienceLevel: experienceLevel, skills: skills, minMatchScore: minMatchScore });
-          prefillPreferencesForm();
-        });
-        document.getElementById("pref-minMatchScore").addEventListener("input", function () {
-          var v = document.getElementById("pref-minMatchScore-value");
-          if (v) v.textContent = this.value;
-        });
-
-        document.getElementById("job-modal").addEventListener("click", function (e) {
-          if (e.target === this) closeModal();
-        });
-        document.getElementById("modal-close").addEventListener("click", closeModal);
-        document.getElementById("modal-apply").addEventListener("click", function () {
-          var job = document.getElementById("job-modal")._currentJob;
-          if (job && job.applyUrl) window.open(job.applyUrl, "_blank", "noopener");
-        });
-        document.getElementById("modal-save").addEventListener("click", function () {
-          var job = document.getElementById("job-modal")._currentJob;
-          if (job) { saveJob(job.id); closeModal(); renderDashboard(); renderSaved(); }
-        });
-
-        document.getElementById("dashboard-job-list").addEventListener("click", function (e) {
-          var card = e.target.closest(".job-card");
-          var btn = e.target.closest("[data-action]");
-          if (!card || !btn) return;
-          var id = card.getAttribute("data-job-id");
-          var job = getJobById(id);
-          if (!job) return;
-          if (btn.getAttribute("data-action") === "view") openModal(job);
-          if (btn.getAttribute("data-action") === "save") { saveJob(id); renderDashboard(); renderSaved(); }
-          if (btn.getAttribute("data-action") === "unsave") { unsaveJob(id); renderDashboard(); renderSaved(); }
-        });
-        document.getElementById("saved-job-list").addEventListener("click", function (e) {
-          var card = e.target.closest(".job-card");
-          var btn = e.target.closest("[data-action]");
-          if (!card || !btn) return;
-          var id = card.getAttribute("data-job-id");
-          var job = getJobById(id);
-          if (!job) return;
-          if (btn.getAttribute("data-action") === "view") openModal(job);
-          if (btn.getAttribute("data-action") === "unsave") { unsaveJob(id); renderSaved(); renderDashboard(); }
-        });
-
-        window.addEventListener("hashchange", function () { render(); });
-        document.getElementById("nav-hamburger").addEventListener("click", function () {
-          if (this.getAttribute("aria-expanded") === "true") closeDrawer();
-          else openDrawer();
-        });
-        document.getElementById("nav-drawer-close").addEventListener("click", closeDrawer);
-        document.querySelectorAll("#nav-drawer .nav__link").forEach(function (link) {
-          link.addEventListener("click", closeDrawer);
-        });
-
-        fillLocationOptions();
-        render();
-      })();
-    </script>
-  </body>
-  </html>
+</html>
