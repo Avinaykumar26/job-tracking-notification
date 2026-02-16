@@ -1031,6 +1031,117 @@
       color: rgba(17, 17, 17, 0.5);
       flex-shrink: 0;
     }
+
+    /* Test checklist */
+    .test-summary {
+      padding: var(--space-m) var(--space-l);
+      border-radius: var(--radius-base);
+      border: 1px solid rgba(17, 17, 17, 0.1);
+      background: rgba(17, 17, 17, 0.02);
+      margin-bottom: var(--space-l);
+      max-width: 600px;
+    }
+
+    .test-summary__count {
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: 24px;
+      font-weight: 600;
+      margin: 0 0 4px;
+      color: var(--color-text);
+    }
+
+    .test-summary__count.is-complete {
+      color: var(--color-success);
+    }
+
+    .test-summary__warning {
+      font-size: 14px;
+      color: var(--color-warning);
+      margin: 0;
+    }
+
+    .test-summary__success {
+      font-size: 14px;
+      color: var(--color-success);
+      margin: 0;
+    }
+
+    .test-checklist {
+      max-width: 600px;
+      margin-bottom: var(--space-l);
+    }
+
+    .test-item {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-s);
+      padding: var(--space-s) 0;
+      border-bottom: 1px solid rgba(17, 17, 17, 0.06);
+    }
+
+    .test-item:last-child {
+      border-bottom: none;
+    }
+
+    .test-item input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--color-success);
+      margin-top: 2px;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .test-item__content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .test-item__label {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--color-text);
+      cursor: pointer;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .test-item__hint {
+      font-size: 12px;
+      color: rgba(17, 17, 17, 0.5);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .test-item.is-checked .test-item__label {
+      color: rgba(17, 17, 17, 0.5);
+      text-decoration: line-through;
+    }
+
+    .test-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-s);
+      max-width: 600px;
+    }
+
+    .btn--ship {
+      background: var(--color-success);
+      border-color: var(--color-success);
+      color: var(--color-bg);
+    }
+
+    .btn--ship:hover {
+      background: rgba(47, 111, 78, 0.85);
+      border-color: rgba(47, 111, 78, 0.85);
+    }
+
+    .btn--ship:disabled {
+      background: rgba(17, 17, 17, 0.1);
+      border-color: rgba(17, 17, 17, 0.1);
+      color: rgba(17, 17, 17, 0.4);
+      cursor: not-allowed;
+    }
   </style>
 </head>
 
@@ -1248,10 +1359,18 @@
         </div>
       </section>
       <section class="route-page" id="page-proof" data-route="proof">
-        <div class="proof-placeholder">
-          <h2 class="proof-placeholder__title">Proof</h2>
-          <p class="proof-placeholder__text">Placeholder for artifact collection. This section will be built in a later
-            step.</p>
+        <h1 class="route-page__title">Verification Checklist</h1>
+        <p class="route-page__subtitle">Complete all tests before shipping. Each item verifies a critical feature.</p>
+        <div class="test-summary" id="test-summary">
+          <p class="test-summary__count" id="test-summary-count">Tests Passed: 0 / 10</p>
+          <p class="test-summary__warning" id="test-summary-warning">Resolve all issues before shipping.</p>
+          <p class="test-summary__success" id="test-summary-success" style="display: none;">All tests passed. Ready to
+            ship.</p>
+        </div>
+        <div class="test-checklist" id="test-checklist"></div>
+        <div class="test-actions">
+          <button type="button" class="btn btn--ship" id="btn-ship" disabled>Ship Product</button>
+          <button type="button" class="btn btn--secondary" id="btn-reset-tests">Reset Test Status</button>
         </div>
       </section>
     </main>
@@ -1286,6 +1405,20 @@
       var PREF_KEY = "jobTrackerPreferences";
       var STATUS_KEY = "jobTrackerStatus";
       var STATUS_HISTORY_KEY = "jobTrackerStatusHistory";
+      var TEST_CHECKLIST_KEY = "jobTrackerTestChecklist";
+
+      var TEST_ITEMS = [
+        { id: "t1", label: "Preferences persist after refresh", hint: "Go to Settings, save preferences, refresh the page, return to Settings and confirm values are still there." },
+        { id: "t2", label: "Match score calculates correctly", hint: "Set preferences with specific keywords/skills, go to Dashboard, verify match score badges appear on relevant jobs." },
+        { id: "t3", label: "\"Show only matches\" toggle works", hint: "On Dashboard, check the 'Show only jobs above my threshold' toggle. Verify only high-score jobs remain." },
+        { id: "t4", label: "Save job persists after refresh", hint: "Click Save on a job card, refresh the page, go to Saved page and confirm the job is still there." },
+        { id: "t5", label: "Apply opens in new tab", hint: "Click Apply on any job card. Verify the link opens in a new browser tab." },
+        { id: "t6", label: "Status update persists after refresh", hint: "Change a job's status to Applied, refresh the page, confirm the status badge still shows Applied." },
+        { id: "t7", label: "Status filter works correctly", hint: "Set a job to Applied, then use the Status filter dropdown on Dashboard. Verify only Applied jobs appear." },
+        { id: "t8", label: "Digest generates top 10 by score", hint: "Go to Digest, click Generate. Verify 10 jobs appear sorted by match score descending." },
+        { id: "t9", label: "Digest persists for the day", hint: "Generate a digest, refresh the page, return to Digest. The same digest should auto-render." },
+        { id: "t10", label: "No console errors on main pages", hint: "Open browser DevTools (F12), navigate through all pages, confirm zero errors in the Console tab." }
+      ];
 
       var JOBS = [
         { id: "j1", title: "SDE Intern", company: "Amazon", location: "Bangalore", mode: "Hybrid", experience: "Fresher", skills: ["Java", "Data Structures", "Algorithms"], source: "LinkedIn", postedDaysAgo: 1, salaryRange: "₹30k–₹50k/month Internship", applyUrl: "https://www.linkedin.com/jobs/view/1", description: "Work on real customer-facing projects with mentorship from senior engineers. You will design, implement and test features for our retail or AWS teams." },
@@ -1752,6 +1885,45 @@
         if (route === "saved") renderSaved();
         if (route === "digest") renderDigest();
         if (route === "settings") { fillPreferredLocationsOptions(); prefillPreferencesForm(); }
+        if (route === "proof") renderProof();
+      }
+
+      /* ── Test checklist ── */
+      function getTestChecklist() {
+        try { var raw = localStorage.getItem(TEST_CHECKLIST_KEY); return raw ? JSON.parse(raw) : {}; } catch (e) { return {}; }
+      }
+      function saveTestChecklist(data) {
+        try { localStorage.setItem(TEST_CHECKLIST_KEY, JSON.stringify(data)); } catch (e) { }
+      }
+      function renderProof() {
+        var container = document.getElementById("test-checklist");
+        var summaryCount = document.getElementById("test-summary-count");
+        var summaryWarning = document.getElementById("test-summary-warning");
+        var summarySuccess = document.getElementById("test-summary-success");
+        var shipBtn = document.getElementById("btn-ship");
+        if (!container) return;
+        var checked = getTestChecklist();
+        container.innerHTML = "";
+        var passedCount = 0;
+        TEST_ITEMS.forEach(function (item) {
+          var isChecked = !!checked[item.id];
+          if (isChecked) passedCount++;
+          var row = document.createElement("div");
+          row.className = "test-item" + (isChecked ? " is-checked" : "");
+          row.innerHTML = '<input type="checkbox" id="test-cb-' + item.id + '" data-test-id="' + item.id + '"' + (isChecked ? ' checked' : '') + ' />' +
+            '<div class="test-item__content">' +
+            '<label class="test-item__label" for="test-cb-' + item.id + '">' + item.label + '</label>' +
+            '<p class="test-item__hint">' + item.hint + '</p>' +
+            '</div>';
+          container.appendChild(row);
+        });
+        if (summaryCount) {
+          summaryCount.textContent = "Tests Passed: " + passedCount + " / " + TEST_ITEMS.length;
+          summaryCount.classList.toggle("is-complete", passedCount === TEST_ITEMS.length);
+        }
+        if (summaryWarning) summaryWarning.style.display = passedCount < TEST_ITEMS.length ? "block" : "none";
+        if (summarySuccess) summarySuccess.style.display = passedCount === TEST_ITEMS.length ? "block" : "none";
+        if (shipBtn) shipBtn.disabled = passedCount < TEST_ITEMS.length;
       }
 
       /* ── Render status history on digest page ── */
@@ -1929,6 +2101,29 @@
           window.open("mailto:?subject=" + subject + "&body=" + body, "_self");
         });
       }
+
+      /* ── Test checklist event handlers ── */
+      document.getElementById("test-checklist").addEventListener("change", function (e) {
+        var cb = e.target;
+        if (cb.type !== "checkbox" || !cb.getAttribute("data-test-id")) return;
+        var id = cb.getAttribute("data-test-id");
+        var data = getTestChecklist();
+        if (cb.checked) { data[id] = true; } else { delete data[id]; }
+        saveTestChecklist(data);
+        renderProof();
+      });
+      document.getElementById("btn-reset-tests").addEventListener("click", function () {
+        try { localStorage.removeItem(TEST_CHECKLIST_KEY); } catch (e) { }
+        renderProof();
+        showToast("Test status reset.");
+      });
+      document.getElementById("btn-ship").addEventListener("click", function () {
+        var data = getTestChecklist();
+        var allPassed = TEST_ITEMS.every(function (item) { return !!data[item.id]; });
+        if (allPassed) {
+          showToast("All tests passed — ready to ship!");
+        }
+      });
 
       window.addEventListener("hashchange", function () { render(); });
       document.getElementById("nav-hamburger").addEventListener("click", function () {
