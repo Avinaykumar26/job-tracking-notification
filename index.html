@@ -874,6 +874,163 @@
       color: rgba(17, 17, 17, 0.5);
       margin-top: var(--space-m);
     }
+
+    /* Status badges */
+    .badge--status-not-applied {
+      background: rgba(17, 17, 17, 0.08);
+      color: rgba(17, 17, 17, 0.6);
+    }
+
+    .badge--status-applied {
+      background: rgba(37, 99, 235, 0.12);
+      color: #2563eb;
+    }
+
+    .badge--status-rejected {
+      background: rgba(139, 0, 0, 0.12);
+      color: var(--color-accent);
+    }
+
+    .badge--status-selected {
+      background: rgba(47, 111, 78, 0.18);
+      color: var(--color-success);
+    }
+
+    /* Status button group */
+    .status-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: var(--space-xs);
+      padding-top: var(--space-xs);
+      border-top: 1px solid rgba(17, 17, 17, 0.06);
+    }
+
+    .status-btn {
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      border-radius: var(--radius-base);
+      border: 1px solid rgba(17, 17, 17, 0.12);
+      background: transparent;
+      color: rgba(17, 17, 17, 0.6);
+      cursor: pointer;
+      transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    .status-btn:hover {
+      background: rgba(17, 17, 17, 0.04);
+    }
+
+    .status-btn.is-active-status {
+      font-weight: 700;
+    }
+
+    .status-btn.is-active-status[data-status="Not Applied"] {
+      background: rgba(17, 17, 17, 0.08);
+      color: rgba(17, 17, 17, 0.7);
+      border-color: rgba(17, 17, 17, 0.2);
+    }
+
+    .status-btn.is-active-status[data-status="Applied"] {
+      background: rgba(37, 99, 235, 0.12);
+      color: #2563eb;
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+
+    .status-btn.is-active-status[data-status="Rejected"] {
+      background: rgba(139, 0, 0, 0.12);
+      color: var(--color-accent);
+      border-color: rgba(139, 0, 0, 0.3);
+    }
+
+    .status-btn.is-active-status[data-status="Selected"] {
+      background: rgba(47, 111, 78, 0.18);
+      color: var(--color-success);
+      border-color: rgba(47, 111, 78, 0.3);
+    }
+
+    /* Toast */
+    .toast-container {
+      position: fixed;
+      bottom: var(--space-l);
+      right: var(--space-l);
+      z-index: 300;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .toast {
+      padding: 12px var(--space-m);
+      border-radius: var(--radius-base);
+      background: var(--color-text);
+      color: var(--color-bg);
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 4px 16px rgba(17, 17, 17, 0.2);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 200ms ease-in-out, transform 200ms ease-in-out;
+    }
+
+    .toast.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Recent status updates */
+    .status-updates {
+      margin-top: var(--space-l);
+      max-width: 600px;
+    }
+
+    .status-updates__title {
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0 0 var(--space-s);
+      color: var(--color-text);
+    }
+
+    .status-update-item {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-xs);
+      padding: var(--space-s) 0;
+      border-bottom: 1px solid rgba(17, 17, 17, 0.06);
+      font-size: 14px;
+    }
+
+    .status-update-item:last-child {
+      border-bottom: none;
+    }
+
+    .status-update-item__info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .status-update-item__title {
+      font-weight: 600;
+      margin: 0 0 2px;
+    }
+
+    .status-update-item__meta {
+      font-size: 13px;
+      color: rgba(17, 17, 17, 0.6);
+      margin: 0;
+    }
+
+    .status-update-item__date {
+      font-size: 12px;
+      color: rgba(17, 17, 17, 0.5);
+      flex-shrink: 0;
+    }
   </style>
 </head>
 
@@ -954,6 +1111,16 @@
             </select>
           </div>
           <div class="field">
+            <label class="field__label" for="filter-status">Status</label>
+            <select id="filter-status" class="field__select">
+              <option value="">All</option>
+              <option value="Not Applied">Not Applied</option>
+              <option value="Applied">Applied</option>
+              <option value="Rejected">Rejected</option>
+              <option value="Selected">Selected</option>
+            </select>
+          </div>
+          <div class="field">
             <label class="field__label" for="filter-sort">Sort</label>
             <select id="filter-sort" class="field__select">
               <option value="latest">Latest</option>
@@ -1020,6 +1187,13 @@
               <button type="button" class="btn btn--primary" id="digest-email-btn">Create Email Draft</button>
             </div>
             <p class="digest-note">Demo Mode: Daily 9AM trigger simulated manually.</p>
+          </div>
+        </div>
+        <div class="status-updates" id="digest-status-updates" style="display: none;">
+          <h3 class="status-updates__title">Recent Status Updates</h3>
+          <div id="digest-status-list"></div>
+          <div class="empty-state" id="digest-status-empty" style="display: none;">
+            <p class="empty-state__text">No status changes yet.</p>
           </div>
         </div>
       </section>
@@ -1103,12 +1277,15 @@
       </div>
     </div>
   </div>
+  <div class="toast-container" id="toast-container"></div>
 
   <script>
     (function () {
       var DEFAULT_ROUTE = "landing";
       var SAVED_KEY = "job-tracker-saved";
       var PREF_KEY = "jobTrackerPreferences";
+      var STATUS_KEY = "jobTrackerStatus";
+      var STATUS_HISTORY_KEY = "jobTrackerStatusHistory";
 
       var JOBS = [
         { id: "j1", title: "SDE Intern", company: "Amazon", location: "Bangalore", mode: "Hybrid", experience: "Fresher", skills: ["Java", "Data Structures", "Algorithms"], source: "LinkedIn", postedDaysAgo: 1, salaryRange: "₹30k–₹50k/month Internship", applyUrl: "https://www.linkedin.com/jobs/view/1", description: "Work on real customer-facing projects with mentorship from senior engineers. You will design, implement and test features for our retail or AWS teams." },
@@ -1270,6 +1447,47 @@
         return m ? parseFloat(m[1], 10) : 0;
       }
 
+      /* ── Status tracking ── */
+      function getAllStatuses() {
+        try { var raw = localStorage.getItem(STATUS_KEY); return raw ? JSON.parse(raw) : {}; } catch (e) { return {}; }
+      }
+      function getJobStatus(id) { return getAllStatuses()[id] || "Not Applied"; }
+      function setJobStatus(id, status) {
+        var all = getAllStatuses(); all[id] = status;
+        try { localStorage.setItem(STATUS_KEY, JSON.stringify(all)); } catch (e) { }
+      }
+      function getStatusHistory() {
+        try { var raw = localStorage.getItem(STATUS_HISTORY_KEY); return raw ? JSON.parse(raw) : []; } catch (e) { return []; }
+      }
+      function addStatusHistory(jobId, status) {
+        var history = getStatusHistory();
+        var job = getJobById(jobId);
+        history.unshift({ jobId: jobId, title: job ? job.title : "", company: job ? job.company : "", status: status, date: new Date().toISOString() });
+        if (history.length > 50) history = history.slice(0, 50);
+        try { localStorage.setItem(STATUS_HISTORY_KEY, JSON.stringify(history)); } catch (e) { }
+      }
+      function statusBadgeClass(status) {
+        if (status === "Applied") return "badge--status-applied";
+        if (status === "Rejected") return "badge--status-rejected";
+        if (status === "Selected") return "badge--status-selected";
+        return "badge--status-not-applied";
+      }
+
+      /* ── Toast ── */
+      function showToast(message) {
+        var container = document.getElementById("toast-container");
+        if (!container) return;
+        var toast = document.createElement("div");
+        toast.className = "toast";
+        toast.textContent = message;
+        container.appendChild(toast);
+        requestAnimationFrame(function () { toast.classList.add("is-visible"); });
+        setTimeout(function () {
+          toast.classList.remove("is-visible");
+          setTimeout(function () { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 200);
+        }, 2500);
+      }
+
       function filterAndSortJobs() {
         var keyword = (document.getElementById("filter-keyword") && document.getElementById("filter-keyword").value) ? document.getElementById("filter-keyword").value.trim().toLowerCase() : "";
         var location = document.getElementById("filter-location") ? document.getElementById("filter-location").value : "";
@@ -1284,6 +1502,8 @@
         if (mode) list = list.filter(function (j) { return j.mode === mode; });
         if (experience) list = list.filter(function (j) { return j.experience === experience; });
         if (source) list = list.filter(function (j) { return j.source === source; });
+        var statusFilter = document.getElementById("filter-status") ? document.getElementById("filter-status").value : "";
+        if (statusFilter) list = list.filter(function (j) { return getJobStatus(j.id) === statusFilter; });
         var i, j;
         for (i = 0; i < list.length; i++) list[i]._matchScore = computeMatchScore(list[i], prefs);
         var thresholdEl = document.getElementById("filter-above-threshold");
@@ -1415,11 +1635,31 @@
         var saved = isSaved(job.id);
         var score = job._matchScore;
         if (showMatchScore && score === undefined) score = computeMatchScore(job, getPreferences());
-        var scoreBadge = (showMatchScore && score !== undefined) ? "<span class=\"badge " + matchScoreBadgeClass(score) + "\">" + score + "% match</span>" : "";
+        var scoreBadge = (showMatchScore && score !== undefined) ? '<span class="badge ' + matchScoreBadgeClass(score) + '">' + score + '% match</span>' : '';
+        var currentStatus = getJobStatus(job.id);
+        var statusBadge = '<span class="badge ' + statusBadgeClass(currentStatus) + '">' + currentStatus + '</span>';
+        var statuses = ["Not Applied", "Applied", "Rejected", "Selected"];
+        var statusButtons = '<div class="status-group">';
+        for (var si = 0; si < statuses.length; si++) {
+          var s = statuses[si];
+          statusButtons += '<button type="button" class="status-btn' + (s === currentStatus ? ' is-active-status' : '') + '" data-status="' + s + '">' + s + '</button>';
+        }
+        statusButtons += '</div>';
         var card = document.createElement("div");
         card.className = "job-card";
         card.setAttribute("data-job-id", job.id);
-        card.innerHTML = "<div class=\"job-card__title\">" + (job.title || "") + "</div><div class=\"job-card__company\">" + (job.company || "") + "</div><div class=\"job-card__meta\"><span>" + (job.location || "") + " · " + (job.mode || "") + "</span><span>" + (job.experience || "") + "</span><span>" + (job.salaryRange || "") + "</span></div><div class=\"job-card__footer\"><div class=\"job-card__badges\">" + scoreBadge + "<span class=\"badge " + sourceClass(job.source || "") + "\">" + (job.source || "") + "</span><span class=\"job-card__posted\">" + postedText(job.postedDaysAgo) + "</span></div><div class=\"job-card__actions\"><button type=\"button\" class=\"btn btn--secondary btn--sm\" data-action=\"view\">View</button><button type=\"button\" class=\"btn " + (saved ? "btn--saved btn--sm\" data-action=\"unsave\">Saved" : "btn--secondary btn--sm\" data-action=\"save\">Save") + "</button><a href=\"" + (job.applyUrl || "#") + "\" target=\"_blank\" rel=\"noopener\" class=\"btn btn--primary btn--sm\">Apply</a></div></div>";
+        card.innerHTML = '<div class="job-card__title">' + (job.title || '') + '</div>' +
+          '<div class="job-card__company">' + (job.company || '') + '</div>' +
+          '<div class="job-card__meta"><span>' + (job.location || '') + ' · ' + (job.mode || '') + '</span><span>' + (job.experience || '') + '</span><span>' + (job.salaryRange || '') + '</span></div>' +
+          '<div class="job-card__footer">' +
+          '<div class="job-card__badges">' + scoreBadge + statusBadge + '<span class="badge ' + sourceClass(job.source || '') + '">' + (job.source || '') + '</span><span class="job-card__posted">' + postedText(job.postedDaysAgo) + '</span></div>' +
+          '<div class="job-card__actions">' +
+          '<button type="button" class="btn btn--secondary btn--sm" data-action="view">View</button>' +
+          '<button type="button" class="btn ' + (saved ? 'btn--saved btn--sm" data-action="unsave">Saved' : 'btn--secondary btn--sm" data-action="save">Save') + '</button>' +
+          '<a href="' + (job.applyUrl || '#') + '" target="_blank" rel="noopener" class="btn btn--primary btn--sm">Apply</a>' +
+          '</div>' +
+          '</div>' +
+          statusButtons;
         container.appendChild(card);
       }
       function renderDashboard() {
@@ -1453,6 +1693,7 @@
         if (!prefs) {
           if (noPrefsEl) noPrefsEl.style.display = "block";
           if (contentEl) contentEl.style.display = "none";
+          renderStatusHistory();
           return;
         }
         if (noPrefsEl) noPrefsEl.style.display = "none";
@@ -1464,6 +1705,7 @@
           if (noMatchesEl) noMatchesEl.style.display = "none";
           if (cardWrapEl) cardWrapEl.style.display = "none";
         }
+        renderStatusHistory();
       }
       function renderDigestCard(digest) {
         var noMatchesEl = document.getElementById("digest-no-matches");
@@ -1512,6 +1754,53 @@
         if (route === "settings") { fillPreferredLocationsOptions(); prefillPreferencesForm(); }
       }
 
+      /* ── Render status history on digest page ── */
+      function renderStatusHistory() {
+        var wrapEl = document.getElementById("digest-status-updates");
+        var listEl = document.getElementById("digest-status-list");
+        var emptyEl = document.getElementById("digest-status-empty");
+        if (!wrapEl || !listEl) return;
+        var history = getStatusHistory();
+        if (!history.length) {
+          wrapEl.style.display = "block";
+          listEl.innerHTML = "";
+          if (emptyEl) emptyEl.style.display = "block";
+          return;
+        }
+        wrapEl.style.display = "block";
+        if (emptyEl) emptyEl.style.display = "none";
+        listEl.innerHTML = "";
+        var shown = history.slice(0, 20);
+        shown.forEach(function (entry) {
+          var d = new Date(entry.date);
+          var dateStr = d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) + ", " + d.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+          var item = document.createElement("div");
+          item.className = "status-update-item";
+          item.innerHTML = '<div class="status-update-item__info">' +
+            '<p class="status-update-item__title">' + (entry.title || '') + '</p>' +
+            '<p class="status-update-item__meta">' + (entry.company || '') + ' · <span class="badge ' + statusBadgeClass(entry.status) + '">' + (entry.status || '') + '</span></p>' +
+            '</div>' +
+            '<span class="status-update-item__date">' + dateStr + '</span>';
+          listEl.appendChild(item);
+        });
+      }
+
+      /* ── Handle status change from job cards ── */
+      function handleStatusClick(e) {
+        var btn = e.target.closest(".status-btn");
+        if (!btn) return;
+        var card = btn.closest(".job-card");
+        if (!card) return;
+        var jobId = card.getAttribute("data-job-id");
+        var newStatus = btn.getAttribute("data-status");
+        if (!jobId || !newStatus) return;
+        setJobStatus(jobId, newStatus);
+        addStatusHistory(jobId, newStatus);
+        showToast("Status updated: " + newStatus);
+        renderDashboard();
+        renderSaved();
+      }
+
       function openDrawer() {
         var drawer = document.getElementById("nav-drawer");
         var hamburger = document.getElementById("nav-hamburger");
@@ -1527,7 +1816,7 @@
 
       var filterKeyword = document.getElementById("filter-keyword");
       if (filterKeyword) { filterKeyword.addEventListener("input", renderDashboard); filterKeyword.addEventListener("keyup", renderDashboard); }
-      ["filter-location", "filter-mode", "filter-experience", "filter-source", "filter-sort"].forEach(function (id) {
+      ["filter-location", "filter-mode", "filter-experience", "filter-source", "filter-status", "filter-sort"].forEach(function (id) {
         var el = document.getElementById(id);
         if (el) el.addEventListener("change", renderDashboard);
       });
@@ -1566,6 +1855,7 @@
       });
 
       document.getElementById("dashboard-job-list").addEventListener("click", function (e) {
+        if (e.target.closest(".status-btn")) { handleStatusClick(e); return; }
         var card = e.target.closest(".job-card");
         var btn = e.target.closest("[data-action]");
         if (!card || !btn) return;
@@ -1577,6 +1867,7 @@
         if (btn.getAttribute("data-action") === "unsave") { unsaveJob(id); renderDashboard(); renderSaved(); }
       });
       document.getElementById("saved-job-list").addEventListener("click", function (e) {
+        if (e.target.closest(".status-btn")) { handleStatusClick(e); return; }
         var card = e.target.closest(".job-card");
         var btn = e.target.closest("[data-action]");
         if (!card || !btn) return;
