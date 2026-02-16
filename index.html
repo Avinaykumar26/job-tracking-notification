@@ -1142,6 +1142,191 @@
       color: rgba(17, 17, 17, 0.4);
       cursor: not-allowed;
     }
+
+    /* Proof page */
+    .proof-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-s);
+      margin-bottom: var(--space-xs);
+      max-width: 640px;
+    }
+
+    .proof-header__title {
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: 26px;
+      font-weight: 600;
+      margin: 0;
+      color: var(--color-text);
+    }
+
+    .proof-status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: var(--radius-base);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .proof-status-badge--not-started {
+      background: rgba(17, 17, 17, 0.08);
+      color: rgba(17, 17, 17, 0.6);
+    }
+
+    .proof-status-badge--in-progress {
+      background: rgba(37, 99, 235, 0.12);
+      color: #2563eb;
+    }
+
+    .proof-status-badge--shipped {
+      background: rgba(47, 111, 78, 0.18);
+      color: var(--color-success);
+    }
+
+    .proof-subtitle {
+      font-size: 14px;
+      color: rgba(17, 17, 17, 0.6);
+      margin: 0 0 var(--space-l);
+      max-width: 640px;
+    }
+
+    .proof-section {
+      margin-bottom: var(--space-l);
+      max-width: 640px;
+    }
+
+    .proof-section__title {
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: rgba(17, 17, 17, 0.5);
+      margin: 0 0 var(--space-s);
+    }
+
+    .step-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-s);
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(17, 17, 17, 0.06);
+      font-size: 14px;
+    }
+
+    .step-item:last-child {
+      border-bottom: none;
+    }
+
+    .step-item__number {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .step-item__number--done {
+      background: var(--color-success);
+      color: var(--color-bg);
+    }
+
+    .step-item__number--pending {
+      background: rgba(17, 17, 17, 0.1);
+      color: rgba(17, 17, 17, 0.5);
+    }
+
+    .step-item__label {
+      flex: 1;
+    }
+
+    .step-item__status {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .step-item__status--done {
+      color: var(--color-success);
+    }
+
+    .step-item__status--pending {
+      color: rgba(17, 17, 17, 0.45);
+    }
+
+    .artifact-field {
+      margin-bottom: var(--space-m);
+    }
+
+    .artifact-field__label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 4px;
+      color: var(--color-text);
+    }
+
+    .artifact-field__input {
+      width: 100%;
+      max-width: 560px;
+      padding: 10px 14px;
+      border-radius: var(--radius-base);
+      border: 1px solid rgba(17, 17, 17, 0.15);
+      font-size: 14px;
+      font-family: inherit;
+      background: var(--color-bg);
+      color: var(--color-text);
+      transition: border-color var(--transition-fast);
+      box-sizing: border-box;
+    }
+
+    .artifact-field__input:focus {
+      outline: none;
+      border-color: var(--color-accent);
+    }
+
+    .artifact-field__input.is-invalid {
+      border-color: var(--color-accent);
+    }
+
+    .artifact-field__input.is-valid {
+      border-color: var(--color-success);
+    }
+
+    .artifact-field__error {
+      font-size: 12px;
+      color: var(--color-accent);
+      margin-top: 2px;
+      display: none;
+    }
+
+    .proof-shipped-msg {
+      padding: var(--space-m) var(--space-l);
+      border-radius: var(--radius-base);
+      border: 1px solid rgba(47, 111, 78, 0.2);
+      background: rgba(47, 111, 78, 0.06);
+      max-width: 640px;
+      margin-top: var(--space-m);
+      display: none;
+    }
+
+    .proof-shipped-msg p {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--color-success);
+    }
   </style>
 </head>
 
@@ -1359,18 +1544,65 @@
         </div>
       </section>
       <section class="route-page" id="page-proof" data-route="proof">
-        <h1 class="route-page__title">Verification Checklist</h1>
-        <p class="route-page__subtitle">Complete all tests before shipping. Each item verifies a critical feature.</p>
-        <div class="test-summary" id="test-summary">
-          <p class="test-summary__count" id="test-summary-count">Tests Passed: 0 / 10</p>
-          <p class="test-summary__warning" id="test-summary-warning">Resolve all issues before shipping.</p>
-          <p class="test-summary__success" id="test-summary-success" style="display: none;">All tests passed. Ready to
-            ship.</p>
+        <div class="proof-header">
+          <h1 class="proof-header__title">Project 1 — Job Notification Tracker</h1>
+          <span class="proof-status-badge" id="proof-status-badge">Not Started</span>
         </div>
-        <div class="test-checklist" id="test-checklist"></div>
-        <div class="test-actions">
-          <button type="button" class="btn btn--ship" id="btn-ship" disabled>Ship Product</button>
-          <button type="button" class="btn btn--secondary" id="btn-reset-tests">Reset Test Status</button>
+        <p class="proof-subtitle">Complete all verification steps, provide deployment links, then ship.</p>
+
+        <!-- A) Step Completion Summary -->
+        <div class="proof-section">
+          <h2 class="proof-section__title">A — Step Completion</h2>
+          <ul class="step-list" id="proof-step-list"></ul>
+        </div>
+
+        <!-- B) Test Checklist -->
+        <div class="proof-section">
+          <h2 class="proof-section__title">B — Verification Checklist</h2>
+          <div class="test-summary" id="test-summary">
+            <p class="test-summary__count" id="test-summary-count">Tests Passed: 0 / 10</p>
+            <p class="test-summary__warning" id="test-summary-warning">Resolve all issues before shipping.</p>
+            <p class="test-summary__success" id="test-summary-success" style="display: none;">All tests passed.</p>
+          </div>
+          <div class="test-checklist" id="test-checklist"></div>
+          <div style="margin-top: var(--space-s); max-width: 600px;">
+            <button type="button" class="btn btn--secondary" id="btn-reset-tests">Reset Test Status</button>
+          </div>
+        </div>
+
+        <!-- C) Artifact Collection -->
+        <div class="proof-section">
+          <h2 class="proof-section__title">C — Artifact Links</h2>
+          <div class="artifact-field">
+            <label class="artifact-field__label" for="proof-lovable">Lovable Project Link</label>
+            <input type="url" id="proof-lovable" class="artifact-field__input"
+              placeholder="https://lovable.dev/projects/..." />
+            <p class="artifact-field__error" id="proof-lovable-error">Please enter a valid URL.</p>
+          </div>
+          <div class="artifact-field">
+            <label class="artifact-field__label" for="proof-github">GitHub Repository Link</label>
+            <input type="url" id="proof-github" class="artifact-field__input" placeholder="https://github.com/..." />
+            <p class="artifact-field__error" id="proof-github-error">Please enter a valid URL.</p>
+          </div>
+          <div class="artifact-field">
+            <label class="artifact-field__label" for="proof-deploy">Deployed URL (Vercel or equivalent)</label>
+            <input type="url" id="proof-deploy" class="artifact-field__input"
+              placeholder="https://your-app.vercel.app" />
+            <p class="artifact-field__error" id="proof-deploy-error">Please enter a valid URL.</p>
+          </div>
+          <button type="button" class="btn btn--secondary" id="btn-save-links">Save Links</button>
+        </div>
+
+        <!-- D) Final Actions -->
+        <div class="proof-section">
+          <h2 class="proof-section__title">D — Ship</h2>
+          <div class="test-actions">
+            <button type="button" class="btn btn--ship" id="btn-ship" disabled>Ship Project</button>
+            <button type="button" class="btn btn--secondary" id="btn-copy-submission">Copy Final Submission</button>
+          </div>
+          <div class="proof-shipped-msg" id="proof-shipped-msg">
+            <p>Project 1 Shipped Successfully.</p>
+          </div>
         </div>
       </section>
     </main>
@@ -1406,6 +1638,19 @@
       var STATUS_KEY = "jobTrackerStatus";
       var STATUS_HISTORY_KEY = "jobTrackerStatusHistory";
       var TEST_CHECKLIST_KEY = "jobTrackerTestChecklist";
+      var PROOF_LINKS_KEY = "jobTrackerProofLinks";
+      var PROOF_SHIPPED_KEY = "jobTrackerShipped";
+
+      var STEP_ITEMS = [
+        { id: "s1", label: "Project Setup & Landing Page" },
+        { id: "s2", label: "Dashboard with Job Cards" },
+        { id: "s3", label: "Preference Engine (Settings)" },
+        { id: "s4", label: "Match Scoring System" },
+        { id: "s5", label: "Daily Digest Engine" },
+        { id: "s6", label: "Job Status Tracking" },
+        { id: "s7", label: "Notification Templates (Toast & History)" },
+        { id: "s8", label: "Test Checklist & Ship System" }
+      ];
 
       var TEST_ITEMS = [
         { id: "t1", label: "Preferences persist after refresh", hint: "Go to Settings, save preferences, refresh the page, return to Settings and confirm values are still there." },
@@ -1895,13 +2140,67 @@
       function saveTestChecklist(data) {
         try { localStorage.setItem(TEST_CHECKLIST_KEY, JSON.stringify(data)); } catch (e) { }
       }
+      function getProofLinks() {
+        try { var raw = localStorage.getItem(PROOF_LINKS_KEY); return raw ? JSON.parse(raw) : {}; } catch (e) { return {}; }
+      }
+      function saveProofLinks(data) {
+        try { localStorage.setItem(PROOF_LINKS_KEY, JSON.stringify(data)); } catch (e) { }
+      }
+      function isShipped() {
+        return localStorage.getItem(PROOF_SHIPPED_KEY) === "true";
+      }
+      function isValidUrl(s) {
+        if (!s || typeof s !== "string") return false;
+        try { var u = new URL(s); return u.protocol === "http:" || u.protocol === "https:"; } catch (e) { return false; }
+      }
+      function getStepStatuses() {
+        var prefs = getPreferences();
+        var saved = getSavedIds();
+        var statuses = getAllStatuses();
+        var history = getStatusHistory();
+        var digest = getDigestForToday();
+        var testChecks = getTestChecklist();
+        var testAllDone = TEST_ITEMS.every(function (item) { return !!testChecks[item.id]; });
+        return [
+          true,
+          true,
+          !!prefs,
+          !!prefs,
+          !!(digest && digest.jobs && digest.jobs.length),
+          Object.keys(statuses).length > 0,
+          history.length > 0,
+          testAllDone
+        ];
+      }
       function renderProof() {
+        var stepList = document.getElementById("proof-step-list");
         var container = document.getElementById("test-checklist");
         var summaryCount = document.getElementById("test-summary-count");
         var summaryWarning = document.getElementById("test-summary-warning");
         var summarySuccess = document.getElementById("test-summary-success");
         var shipBtn = document.getElementById("btn-ship");
+        var statusBadge = document.getElementById("proof-status-badge");
+        var shippedMsg = document.getElementById("proof-shipped-msg");
         if (!container) return;
+
+        /* Steps */
+        if (stepList) {
+          stepList.innerHTML = "";
+          var stepStatuses = getStepStatuses();
+          var stepsCompleted = 0;
+          STEP_ITEMS.forEach(function (step, idx) {
+            var done = stepStatuses[idx];
+            if (done) stepsCompleted++;
+            var li = document.createElement("li");
+            li.className = "step-item";
+            li.innerHTML = '<span class="step-item__number ' + (done ? 'step-item__number--done' : 'step-item__number--pending') + '">' + (idx + 1) + '</span>' +
+              '<span class="step-item__label">' + step.label + '</span>' +
+              '<span class="step-item__status ' + (done ? 'step-item__status--done' : 'step-item__status--pending') + '">' + (done ? 'Completed' : 'Pending') + '</span>';
+            stepList.appendChild(li);
+          });
+        }
+
+        /* Test checklist */
         var checked = getTestChecklist();
         container.innerHTML = "";
         var passedCount = 0;
@@ -1923,7 +2222,38 @@
         }
         if (summaryWarning) summaryWarning.style.display = passedCount < TEST_ITEMS.length ? "block" : "none";
         if (summarySuccess) summarySuccess.style.display = passedCount === TEST_ITEMS.length ? "block" : "none";
-        if (shipBtn) shipBtn.disabled = passedCount < TEST_ITEMS.length;
+
+        /* Artifact inputs */
+        var links = getProofLinks();
+        var lovableEl = document.getElementById("proof-lovable");
+        var githubEl = document.getElementById("proof-github");
+        var deployEl = document.getElementById("proof-deploy");
+        if (lovableEl && !lovableEl._prefilled) { lovableEl.value = links.lovable || ""; lovableEl._prefilled = true; }
+        if (githubEl && !githubEl._prefilled) { githubEl.value = links.github || ""; githubEl._prefilled = true; }
+        if (deployEl && !deployEl._prefilled) { deployEl.value = links.deploy || ""; deployEl._prefilled = true; }
+
+        /* Ship validation */
+        var allTestsPassed = passedCount === TEST_ITEMS.length;
+        var allLinksValid = isValidUrl(links.lovable) && isValidUrl(links.github) && isValidUrl(links.deploy);
+        var canShip = allTestsPassed && allLinksValid;
+        var shipped = isShipped();
+
+        if (shipBtn) shipBtn.disabled = !canShip || shipped;
+
+        /* Status badge */
+        if (statusBadge) {
+          if (shipped) {
+            statusBadge.textContent = "Shipped";
+            statusBadge.className = "proof-status-badge proof-status-badge--shipped";
+          } else if (passedCount > 0 || Object.keys(links).length > 0) {
+            statusBadge.textContent = "In Progress";
+            statusBadge.className = "proof-status-badge proof-status-badge--in-progress";
+          } else {
+            statusBadge.textContent = "Not Started";
+            statusBadge.className = "proof-status-badge proof-status-badge--not-started";
+          }
+        }
+        if (shippedMsg) shippedMsg.style.display = shipped ? "block" : "none";
       }
 
       /* ── Render status history on digest page ── */
@@ -2114,14 +2444,77 @@
       });
       document.getElementById("btn-reset-tests").addEventListener("click", function () {
         try { localStorage.removeItem(TEST_CHECKLIST_KEY); } catch (e) { }
+        var lovableEl = document.getElementById("proof-lovable"); if (lovableEl) lovableEl._prefilled = false;
+        var githubEl = document.getElementById("proof-github"); if (githubEl) githubEl._prefilled = false;
+        var deployEl = document.getElementById("proof-deploy"); if (deployEl) deployEl._prefilled = false;
         renderProof();
         showToast("Test status reset.");
       });
+
+      /* ── Artifact link handlers ── */
+      document.getElementById("btn-save-links").addEventListener("click", function () {
+        var lovable = (document.getElementById("proof-lovable").value || "").trim();
+        var github = (document.getElementById("proof-github").value || "").trim();
+        var deploy = (document.getElementById("proof-deploy").value || "").trim();
+        var valid = true;
+        var fields = [
+          { val: lovable, inputId: "proof-lovable", errorId: "proof-lovable-error" },
+          { val: github, inputId: "proof-github", errorId: "proof-github-error" },
+          { val: deploy, inputId: "proof-deploy", errorId: "proof-deploy-error" }
+        ];
+        fields.forEach(function (f) {
+          var input = document.getElementById(f.inputId);
+          var err = document.getElementById(f.errorId);
+          if (f.val && !isValidUrl(f.val)) {
+            if (input) { input.classList.add("is-invalid"); input.classList.remove("is-valid"); }
+            if (err) err.style.display = "block";
+            valid = false;
+          } else {
+            if (input) { input.classList.remove("is-invalid"); if (f.val) input.classList.add("is-valid"); else input.classList.remove("is-valid"); }
+            if (err) err.style.display = "none";
+          }
+        });
+        if (!valid) { showToast("Fix invalid URLs before saving."); return; }
+        saveProofLinks({ lovable: lovable, github: github, deploy: deploy });
+        showToast("Links saved.");
+        renderProof();
+      });
+
+      /* ── Ship handler ── */
       document.getElementById("btn-ship").addEventListener("click", function () {
         var data = getTestChecklist();
         var allPassed = TEST_ITEMS.every(function (item) { return !!data[item.id]; });
-        if (allPassed) {
-          showToast("All tests passed — ready to ship!");
+        var links = getProofLinks();
+        var allLinks = isValidUrl(links.lovable) && isValidUrl(links.github) && isValidUrl(links.deploy);
+        if (allPassed && allLinks) {
+          try { localStorage.setItem(PROOF_SHIPPED_KEY, "true"); } catch (e) { }
+          showToast("Project 1 Shipped Successfully.");
+          renderProof();
+        }
+      });
+
+      /* ── Copy final submission ── */
+      document.getElementById("btn-copy-submission").addEventListener("click", function () {
+        var links = getProofLinks();
+        var text = "------------------------------------------\n" +
+          "Job Notification Tracker — Final Submission\n" +
+          "------------------------------------------\n\n" +
+          "Lovable Project:\n" + (links.lovable || "(not provided)") + "\n\n" +
+          "GitHub Repository:\n" + (links.github || "(not provided)") + "\n\n" +
+          "Live Deployment:\n" + (links.deploy || "(not provided)") + "\n\n" +
+          "Core Features:\n" +
+          "- Intelligent match scoring\n" +
+          "- Daily digest simulation\n" +
+          "- Status tracking\n" +
+          "- Test checklist enforced\n" +
+          "------------------------------------------";
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () { showToast("Submission copied to clipboard."); });
+        } else {
+          var ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+          document.body.appendChild(ta); ta.select();
+          try { document.execCommand("copy"); showToast("Submission copied to clipboard."); } catch (e) { }
+          document.body.removeChild(ta);
         }
       });
 
