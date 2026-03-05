@@ -1,6 +1,6 @@
-# job-tracking-notification
+# Job-tracking-notification
 
-# about 
+# About 
 
 AUTHOR : A VINAY KUMAR<br>
 MAIL : avinaykumar2004@gmail.com<br>
