@@ -4,7 +4,7 @@
 
 - Author / Developer : A VINAY KUMAR<br>
 - Mail : avinaykumar2004@gmail.com<br>
-
+- LinkedIn : www.linkedin.com/in/a-vinay-kumar-xyz
 - Working Repo link : https://avinaykumar26.github.io/job-tracking-notification/
 <BR>
 <p> This will be later merged to placement suite
